@@ -1,5 +1,5 @@
 {
-  "name": "@acelords/utils",
+  "name": "@acelords/js-utils",
   "version": "1.0.0",
   "description": "Common utils used on node projects",
   "main": "dist/index.js",
