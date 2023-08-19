@@ -10,6 +10,10 @@ npm i @acelords/js-utils
 pnpm i @acelords/js-utils
 ```
 
+```bash
+npm publish --access public 
+```
+
 ## Docs
 Available functions. [View the entire list here](./src/index.ts)
 - formatDateTime()
