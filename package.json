@@ -1,7 +1,7 @@
 {
   "name": "@acelords/js-utils",
-  "version": "1.0.2",
-  "description": "Common utils used on node projects",
+  "version": "1.0.3",
+  "description": "Common utils and helpers used on node projects",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "type": "module",
@@ -15,9 +15,21 @@
     "build": "tsc",
     "test": "jest"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "acelords",
+    "js-utils",
+    "helpers"
+  ],
+  "author": "AceLords <info@acelords.com> (https://acelords.com)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/acelords/node-utils"
+  },
+  "bugs": {
+    "url": "https://github.com/acelords/node-utils/issues"
+  },
+  "homepage": "https://acelords.com",
   "devDependencies": {
     "@types/jest": "^29.5.3",
     "@types/numeral": "^2.0.2",
