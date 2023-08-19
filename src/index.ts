@@ -8,6 +8,21 @@ const MIN_TIMESTAMP = 75600000;
 const MIN_DATE = 'January 2, 1970';
 
 /**
+ * format a date
+ * date => 22nd Jun 2021, 2:00 pm
+ * https://day.js.org/docs/en/display/format
+ */
+export const formatDate = (dt: Date | string | number | null | undefined, format = 'D MMM, YYYY'): string => {
+    if (!dt) return "";
+    if (isNumeric(dt.toString())) {
+        if (Number(dt) < MIN_TIMESTAMP) return ""
+        return dayjs.unix(Number(dt)).format(format);
+    }
+    if (!dayjs(dt).isValid() || dayjs(dt).isBefore(MIN_DATE)) return ""
+    return dayjs(dt).format(format);
+}
+
+/**
 * format a date and include time by default
 */
 export const formatDateTime = (dt: Date | string | number | null | undefined, format = 'D MMM, YYYY hh:mm a'): string => {

@@ -1,5 +1,38 @@
-import { formatCurrency, formatDateTime, fromNow, getTimeFromDate, insertIntoArray, isNumeric, numberFormat, plural, pluralize, randomNumber, singular, slugify, stripTags, substring, ucwords } from './index'
+import { formatCurrency, formatDate, formatDateTime, fromNow, getTimeFromDate, insertIntoArray, isNumeric, numberFormat, plural, pluralize, randomNumber, singular, slugify, stripTags, substring, ucwords } from './index'
 import dayjs from 'dayjs';
+
+/*======== formatDate =============*/
+test("formatDate - can format a date in string format", () => {
+    const now = new Date().toISOString()
+    const format = 'D MMM, YYYY'
+    const formatted = dayjs(now).format(format)
+    expect(formatDate(now, format)).toBe(formatted);
+});
+
+test("formatDate - can format a date", () => {
+    const now = new Date()
+    const format = 'D MMM, YYYY'
+    const formatted = dayjs(now).format(format)
+    expect(formatDate(now, format)).toBe(formatted);
+});
+
+test("formatDate - returns an empty string when nullish value is passed", () => {
+    expect(formatDate(null)).toBe("");
+    expect(formatDate(undefined)).toBe("");
+});
+
+test("formatDate - can format a date in unixTime (number) format", () => {
+    const now = 1602162242
+    const format = 'D MMM, YYYY'
+    const formatted = dayjs.unix(now).format(format)
+    expect(formatDate(now, format)).toBe(formatted);
+});
+
+test("formatDate - returns empty string on invalid date", () => {
+    expect(formatDate("abc")).toBe("");
+    expect(formatDate("1000")).toBe("");
+    expect(formatDate("Jan 14, 1000")).toBe("");
+});
 
 /*======== formatDateTime =============*/
 test("formatDateTime - can format a date in string format", () => {
