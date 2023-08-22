@@ -9,13 +9,10 @@ npm i @acelords/js-utils
 
 pnpm i @acelords/js-utils
 ```
-
-```bash
-npm publish --access public 
-```
+`
 
 ## Docs
-Available functions. [View the entire list here](./src/index.ts)
+Available functions. [View the entire list here](https://github.com/acelords/node-utils/blob/main/src/index.ts)
 - formatDateTime()
 - getTimeFromDate()
 - randomNumber()
@@ -24,6 +21,7 @@ Available functions. [View the entire list here](./src/index.ts)
 - ucwords()
 - substring()
 - numberFormat()
+- formatNumber()
 - formatCurrency()
 - slugify()
 - stripTags()
@@ -31,3 +29,15 @@ Available functions. [View the entire list here](./src/index.ts)
 - singular()
 - pluralize()
 - insertIntoArray()
+
+
+## Dev Notes
+### Testing
+```bash
+npm t
+```
+
+### Publish to NPM
+```bash
+npm publish --access public 
+```

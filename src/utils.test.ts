@@ -1,4 +1,4 @@
-import { formatCurrency, formatDate, formatDateTime, fromNow, getTimeFromDate, insertIntoArray, isNumeric, numberFormat, plural, pluralize, randomNumber, singular, slugify, stripTags, substring, ucwords } from './index'
+import { formatCurrency, formatDate, formatDateTime, formatNumber, fromNow, getTimeFromDate, insertIntoArray, isNumeric, numberFormat, plural, pluralize, randomNumber, singular, slugify, stripTags, substring, ucwords } from './index'
 import dayjs from 'dayjs';
 
 /*======== formatDate =============*/
@@ -149,6 +149,14 @@ test("numberFormat - can format numeric strings and numbers", () => {
     expect(numberFormat(undefined)).toBe("");
     expect(numberFormat('123456')).toBe("123,456.00");
     expect(numberFormat('123456', true)).toBe("123,456");
+});
+
+test("formatNumber - can format numeric strings and numbers", () => {
+    expect(formatNumber('abcd')).toBe("");
+    expect(formatNumber(null)).toBe("");
+    expect(formatNumber(undefined)).toBe("");
+    expect(formatNumber('123456')).toBe("123,456.00");
+    expect(formatNumber('123456', true)).toBe("123,456");
 });
 
 /*======== formatCurrency =============*/

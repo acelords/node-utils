@@ -107,6 +107,17 @@ export const numberFormat = (value: string | number | undefined | null, toInt = 
 }
 
 /**
+ * An Alias for numberFormat
+ * format a number to 2dp.
+ * - 1000 becomes 1,000.00.
+ * - If toInt=true, 1000000 becomes 1,000,000.
+ * - Displaying other groupings/separators is possible, look at the docs http://numeraljs.com/
+ */
+export const formatNumber = (value: string | number | undefined | null, toInt = false): string => {
+    return numberFormat(value, toInt)
+}
+
+/**
  * format currency. Value passed must be in cents.
  * - 1500000 becomes 15,000.00
  * - 123456 becomes 1,234.56
@@ -196,3 +207,13 @@ export const insertIntoArray = (arr, index, ...newItems) => [
     // part of the array after the specified index
     ...arr.slice(index)
 ]
+
+
+/**
+ * SQL month starts from 1-12, js starts from 0-11
+ * @param index Month index as returned from SQL
+ * @returns string dayjs().format()
+ */
+export function getMonthNameFromSqlMonthIndex(index: number, format = 'MMM') {
+    return dayjs(new Date(2023, index - 1, 1)).format(format)
+}
