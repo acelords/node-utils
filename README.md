@@ -9,7 +9,6 @@ npm i @acelords/js-utils
 
 pnpm i @acelords/js-utils
 ```
-`
 
 ## Docs
 Available functions. [View the entire list here](https://github.com/acelords/node-utils/blob/main/src/index.ts)
@@ -38,6 +37,8 @@ npm t
 ```
 
 ### Publish to NPM
+Before publishing, remember to INCREMENT Versioning and also BUILD it
+
 ```bash
-npm publish --access public 
+npm run build && npm publish --access public 
 ```
