@@ -55,6 +55,25 @@ export const randomNumber = (min = 0, max = 10000) => {
     return Math.floor(Math.random() * (max - min)) + min;
 };
 
+
+/**
+ * generate a random string
+ * @param length number
+ * @param includeNumbers boolean
+ * @returns string
+ */
+export const randomString = (length = 6, includeNumbers = false) => {
+    let result = '';
+    let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    includeNumbers ? characters += '0123456789' : ''
+    const charactersLength = characters.length;
+    for (let i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+};
+
+
 /**
  * - isNumeric('abcd')         // false
  * - isNumeric('123a')         // false
@@ -217,3 +236,20 @@ export const insertIntoArray = (arr, index, ...newItems) => [
 export function getMonthNameFromSqlMonthIndex(index: number, format = 'MMM') {
     return dayjs(new Date(2023, index - 1, 1)).format(format)
 }
+
+/**
+ * check if a string is a phoneNumber.
+ * This is a loose check. For advanced use-cases, use the intl package
+ */
+export const isPhoneNumber = (str: string) => {
+    str = str
+        .replaceAll('+', '')
+        .replaceAll(' ', '')
+        .replaceAll('(', '')
+        .replaceAll(')', '')
+        .replaceAll('-', '')
+        .replaceAll('#', '')
+        .replaceAll('_', '');
+
+    return !isNaN(Number(str));
+};

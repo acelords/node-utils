@@ -15,6 +15,7 @@ Available functions. [View the entire list here](https://github.com/acelords/nod
 - formatDateTime()
 - getTimeFromDate()
 - randomNumber()
+- randomString()
 - isNumeric()
 - fromNow()
 - ucwords()
@@ -28,6 +29,7 @@ Available functions. [View the entire list here](https://github.com/acelords/nod
 - singular()
 - pluralize()
 - insertIntoArray()
+- isPhoneNumber()
 
 
 ## Dev Notes

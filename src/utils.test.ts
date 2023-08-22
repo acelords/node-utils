@@ -1,4 +1,4 @@
-import { formatCurrency, formatDate, formatDateTime, formatNumber, fromNow, getTimeFromDate, insertIntoArray, isNumeric, numberFormat, plural, pluralize, randomNumber, singular, slugify, stripTags, substring, ucwords } from './index'
+import { formatCurrency, formatDate, formatDateTime, formatNumber, fromNow, getTimeFromDate, insertIntoArray, isNumeric, isPhoneNumber, numberFormat, plural, pluralize, randomNumber, randomString, singular, slugify, stripTags, substring, ucwords } from './index'
 import dayjs from 'dayjs';
 
 /*======== formatDate =============*/
@@ -95,6 +95,20 @@ test("randomNumber - can get a random number given min and max", () => {
     expect(randomNumber(10, 80)).toBeLessThan(80);
     expect(randomNumber(10, 11)).toBeGreaterThanOrEqual(10);
     expect(randomNumber(10, 11)).toBeLessThan(11);
+});
+
+/*======== randomString =============*/
+test("randomString - can get a random string given length", () => {
+    expect(randomString(10).length).toBe(10);
+    expect(randomString(10).length).toBe(10);
+    const numerics = randomString(100).replace(/^\D+/g, '');
+    expect(numerics.length).toBe(0);
+});
+
+test("randomString - can get a random string including numbers when specified given length", () => {
+    expect(randomString(10, true).length).toBe(10);
+    const numerics = randomString(100, true).replace(/^\D+/g, '');
+    expect(numerics.length).toBeGreaterThanOrEqual(1);
 });
 
 /*======== randomNumber =============*/
@@ -220,4 +234,13 @@ test("pluralize - can singularize a string", () => {
 test("insertIntoArray - can insert another array inside an array at a certain index", () => {
     expect(insertIntoArray([1, 2, 3, 4], 2, [8, 9]).join(',')).toBe([1, 2, 8, 9, 3, 4].join(','));
     expect(insertIntoArray([1, 2], 5, [8, 9]).join(',')).toBe([1, 2, 8, 9].join(','));
+});
+
+/*======== isPhoneNumber =============*/
+test("isPhoneNumber - can check if a string is a phone number", () => {
+    expect(isPhoneNumber("123456789")).toBeTruthy();
+    expect(isPhoneNumber("+123456789")).toBeTruthy();
+    expect(isPhoneNumber("0123456789")).toBeTruthy();
+    expect(isPhoneNumber("p123456789")).toBeFalsy();
+    expect(isPhoneNumber("~123456789")).toBeFalsy();
 });
