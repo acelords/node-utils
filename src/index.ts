@@ -8,9 +8,11 @@ const MIN_TIMESTAMP = 75600000;
 const MIN_DATE = 'January 2, 1970';
 
 /**
- * format a date
- * date => 22nd Jun 2021, 2:00 pm
+ * format a date. Default format: "D MMM, YYYY"
  * https://day.js.org/docs/en/display/format
+ * - date => 8 Oct, 2020
+ * - null|undefined => ""
+ * - 1602162242 => 8 Oct, 2020
  */
 export const formatDate = (dt: Date | string | number | null | undefined, format = 'D MMM, YYYY'): string => {
     if (!dt) return "";
@@ -23,7 +25,9 @@ export const formatDate = (dt: Date | string | number | null | undefined, format
 }
 
 /**
-* format a date and include time by default
+ * format a date and include time by default. Default format: "D MMM, YYYY hh:mm a"
+ * - date => 8 Oct, 2020 1:04 pm
+ * - 1602162242 => 8 Oct, 2020 1:04 pm
 */
 export const formatDateTime = (dt: Date | string | number | null | undefined, format = 'D MMM, YYYY hh:mm a'): string => {
     if (!dt) return "";
@@ -36,7 +40,9 @@ export const formatDateTime = (dt: Date | string | number | null | undefined, fo
 }
 
 /**
- * return 24-hour time from an  ISO 8601  date
+ * return 24-hour time from an  ISO 8601  date. Default format: "HH:mm"
+ * - date => 21:04
+ * - 1692803186 => 16:04
  */
 export const getTimeFromDate = (dt: string | number | Date, format = "HH:mm"): string => {
     if (isNumeric(dt.toString())) {
@@ -48,8 +54,9 @@ export const getTimeFromDate = (dt: string | number | Date, format = "HH:mm"): s
 };
 
 /**
-* generate a random number, min inclusive, max NOT inclusive
-* - Math.random() -> a number from 0 to <1
+ * generate a random number, min inclusive, max NOT inclusive
+ * - NB: Math.random() ->> a number from 0 to <1
+ * - 10,80 returns 10 <= x < 80
 */
 export const randomNumber = (min = 0, max = 10000) => {
     return Math.floor(Math.random() * (max - min)) + min;
@@ -75,6 +82,7 @@ export const randomString = (length = 6, includeNumbers = false) => {
 
 
 /**
+ * Check if a string is numeric
  * - isNumeric('abcd')         // false
  * - isNumeric('123a')         // false
  * - isNumeric('1')         // true
@@ -93,23 +101,23 @@ export function isNumeric(value: string | number | undefined | null): boolean {
 }
 
 /**
- * check how long a date is from now
+ * Check how long a date is from now
  * - date => 2 days ago
+ * - date => in 2 days
+ * - null|undefined => ""
  */
-export const fromNow = (date: Date | string | null | undefined, addSuffix = undefined) => {
+export const fromNow = (date: Date | string | null | undefined, addSuffix = undefined): string => {
     if (!date) return "";
     if (!dayjs(date).isValid()) return ""
     return dayjs(date).fromNow(addSuffix);
 };
 
 /**
- * Capitalize first word in a string.
- * Does NOT lowerCase the rest
- */
-export const ucwords = (str: string): string => str.substring(0, 1).toUpperCase() + str.substring(1)
-
-/**
- * get a substring of a string
+ * Get a substring of a string
+ * - abcdef, 1 => a
+ * - abcd, 4 => abcd
+ * - abc, 10 => abc 
+ * - null|undefined => ""
  */
 export const substring = (str: string | null | undefined, end: number): string => str ? str.substring(0, end) : ''
 
@@ -117,11 +125,18 @@ export const substring = (str: string | null | undefined, end: number): string =
  * format a number to 2dp.
  * - 1000 becomes 1,000.00.
  * - If toInt=true, 1000000 becomes 1,000,000.
+ * - "ab78"  => ""
+ * - null|undefined => ""
+ * - "0" => "0.00"
+ * - 0 => "0.00"
+ * - "0", true => "0"
+ * - 0, true => "0"
  * - Displaying other groupings/separators is possible, look at the docs http://numeraljs.com/
  */
 export const numberFormat = (value: string | number | undefined | null, toInt = false): string => {
-    if (!value || !isNumeric(value)) return ""
     const format = toInt ? '0,0' : "0,0.00"
+    if (value === 0 || value === "0") return numeral(value).format(format)
+    if (!value || !isNumeric(value)) return ""
     return numeral(value).format(format)
 }
 
@@ -130,6 +145,12 @@ export const numberFormat = (value: string | number | undefined | null, toInt = 
  * format a number to 2dp.
  * - 1000 becomes 1,000.00.
  * - If toInt=true, 1000000 becomes 1,000,000.
+ * - "ab78"  => ""
+ * - null|undefined => ""
+ * - "0" => "0.00"
+ * - 0 => "0.00"
+ * - "0", true => "0"
+ * - 0, true => "0"
  * - Displaying other groupings/separators is possible, look at the docs http://numeraljs.com/
  */
 export const formatNumber = (value: string | number | undefined | null, toInt = false): string => {
@@ -138,25 +159,39 @@ export const formatNumber = (value: string | number | undefined | null, toInt = 
 
 /**
  * format currency. Value passed must be in cents.
- * - 1500000 becomes 15,000.00
- * - 123456 becomes 1,234.56
+ * - 1500000 => 15,000.00
+ * - 123456 => 1,234.56
+ * - "0" => "0.00"
+ * - 0 => "0.00"
  */
 export const formatCurrency = (value: string | number | undefined | null): string => {
+    const format = "0,0.00"
+    if (value === 0 || value === "0") return numeral(0).format(format)
     if (!value || !isNumeric(value)) return ""
     const amount = Number(value.toString()) / 100;
-    return numeral(amount).format("0,0.00")
+    return numeral(amount).format(format)
 }
 
 /**
  * slugify a string.
- * - iwef k[wef #mgt% becomes iwef-kwef-mgt
+ * - iwef k[wef #mgt%  =>  iwef-kwef-mgt
+ * - iwef âẽèéë eded  => iwef-aeeee-eded
+ * - iwef .--/,;: âẽèéë .--/,;: eded  => iwef-aeeee-eded
  */
 export const slugify = (str: string | null | undefined): string => {
     if (!str) return ''
-    return str
+    str = str
         .toLowerCase()
-        .trim()
-        .replace(/[^\w\s-]/g, '')
+        .trim();
+
+    // remove accents, swap ñ for n, etc
+    var from = "ãàáäâẽèéëêìíïîõòóöôùúüûñç·/_,:;";
+    var to = "aaaaaeeeeeiiiiooooouuuunc------";
+    for (var i = 0, l = from.length; i < l; i++) {
+        str = str.replace(new RegExp(from.charAt(i), "g"), to.charAt(i));
+    }
+
+    return str.replace(/[^\w\s-]/g, '')
         .replace(/[\s_-]+/g, '-')
         .replace(/^-+|-+$/g, '');
 }
@@ -166,7 +201,7 @@ export const slugify = (str: string | null | undefined): string => {
 * @param htmlString string
 * @returns string
 */
-export const stripTags = (htmlString: string) => {
+export const stripTags = (htmlString: string): string => {
     return htmlString.replaceAll(/(<([^>]+)>)/gi, '').replace(/<img[^>]*>/gi, '');
 }
 
@@ -240,6 +275,11 @@ export function getMonthNameFromSqlMonthIndex(index: number, format = 'MMM') {
 /**
  * check if a string is a phoneNumber.
  * This is a loose check. For advanced use-cases, use the intl package
+ * - 123456789 => true
+ * - +123456789 => true
+ * - 0123456789 => true
+ * - p123456789 => false
+ * - ~123456789 => false
  */
 export const isPhoneNumber = (str: string) => {
     str = str
@@ -252,4 +292,248 @@ export const isPhoneNumber = (str: string) => {
         .replaceAll('_', '');
 
     return !isNaN(Number(str));
+};
+
+
+/**
+ * check if email is valide
+ * - info@acelords.com => true
+ * - infoacelords.com => false
+ * - info@acelordscom => false
+ * - +123456789 => false
+ * - "" | null | undefined => false
+ */
+export function isEmail(emailAdress: string | null | undefined): boolean {
+    if (!emailAdress) return false;
+
+    let regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+
+    if (emailAdress.match(regex))
+        return true;
+
+    return false;
+}
+
+/**
+ * Check if string, array or object is empty
+ * - null|undefined => true
+ * - "." => false
+ * - "" => true
+ * - [] => true
+ * - [1] | ["k"] => false
+ * - {} => true
+ * - {a:4} => false
+ */
+export const isEmpty = (value: string | null | undefined | object | Array<any>): boolean => {
+    if (!value) return true;
+
+    if (typeof value === 'object')
+        return Object.keys(value).length < 1;
+
+    if (Array.isArray(value))
+        return value.length < 1;
+
+    return value.length < 1;
+};
+
+
+/**
+ * Capitalize first word in a string.
+ * Does NOT lowerCase the rest
+ *  - 'abcd efg' => 'Abcd efg'
+ * - '    abcd efg  ' => 'Abcd efg'
+ */
+export const ucwords = (str: string | null | undefined): string => (str || "").trim().substring(0, 1).toUpperCase() + (str || "").trim().substring(1)
+
+/**
+ * capitalize words in a string
+ * - 'abcd efg' => 'Abcd Efg'
+ * - '    abcd efg  ' => 'Abcd Efg'
+ */
+export const capitalize = (value: string | null | undefined): string => {
+    if (!value) return "";
+    return (value.replace(/(?:^|\s)\S/g, function (a) {
+        return a.toUpperCase();
+    })).trim();
+};
+
+/**
+ * Convert camel case to sentence case
+ * - yourStringIsDope => Your string is dope
+ * - yourStringIsDope, true => Your String Is Dope
+ * - abc456  => Abc456
+ */
+export const camelCaseToSentenceCase = (value: string | null | undefined, capitalizeWords = false): string => {
+    if (!value) return "";
+    value = (value.replace(/([A-Z])/g, " $1")).trim();
+    return capitalizeWords
+        ? value.charAt(0).toUpperCase() + value.slice(1)
+        : value.charAt(0).toUpperCase() + value.slice(1).toLowerCase()
+};
+
+
+/**
+ * Convert snake case to sentence case
+ * - 'my_string_is_dope' => 'My string is dope'
+ * - 'my_string_is_dope', true => 'My String Is Dope'
+ * - 123_456 => 123 456
+ * - abc_efg_456 => Abc efg 456
+ * - abc_efg_456, true => Abc Efg 456
+ * - abc_456_efg => Abc 456 efg
+ * - abc_456_efg, true => Abc 456 Efg
+ */
+export const snakeCaseToSentenceCase = (value: string | null | undefined, capitalizeWords = false): string => {
+    if (!value) return "";
+    value = value.replace(/(_)/g, " ");
+    value = value.replace(/([A-Z])/g, " $1");
+    return capitalizeWords
+        ? value.replace(/\b\w/g, function (l) {
+            return l.toUpperCase();
+        })
+        : value.charAt(0).toUpperCase() + value.slice(1); // capitalize the first letter - as an example.
+};
+
+
+/**
+ * Convert kebab case to sentence case, capitalizing all words
+ * - 'your-string-is-dope' => 'Your string is dope'
+ * - 'your-string-is-dope', true => 'Your String Is Dope'
+ * - 'abcd' => 'abcd'
+ * - 'abcd', true => 'Abcd'
+ * - 123-456 => 123 456
+ * - abc-efg-456 => Abc efg 456
+ * - abc-efg-456, true => Abc Efg 456
+ * - abc-456-efg => Abc 456 efg
+ * - abc-456-efg, true => Abc 456 Efg
+ */
+export const kebabCaseToSentenceCase = (value: string | null | undefined, capitalizeWords = false): string => {
+    if (!value) return "";
+    value = value.replace(/-([a-z])/g, function (g) {
+        return (g[1] ?? "").toUpperCase();
+    });
+    // separate numbers
+    value = value.replace(/-([0-9])/g, function (g) {
+        return ` ${(g[1] ?? "")}`
+    });
+    value = (value.replace(/([A-Z])/g, " $1")).toLowerCase();
+
+    return capitalizeWords
+        ? capitalize(value)
+        : ucwords(value);
+};
+
+/**
+ * Convert kebab-case to PascalCase
+ * - 'your-string' => 'YourString'
+ * - my-string-is-dope => MyStringIsDope
+ * - 123-456-efg => 123456Efg
+ */
+export const kebabCaseToPascalCase = (value: string | null | undefined): string => {
+    if (!value) return "";
+    value = value.replace(/-([a-z])/g, function (g) {
+        return (g[1] ?? "").toUpperCase();
+    });
+    // handle numbers
+    value = value.replace(/-([0-9])/g, function (g) {
+        return `${(g[1] ?? "")}`
+    });
+    value = value.replace(/([A-Z])/g, "$1");
+    return value.replace(/\b\w/g, function (l) {
+        return l.toUpperCase();
+    });
+};
+
+/**
+ * Convert a string to kebab. The string is trimmed first
+ * - abcd => abcd
+ * - aBcD => a-bc-d
+ * - aB-cD => a-b-c-d
+ * - my string => my-string
+ * - my-string-is-dope => my-string-is-dope
+ * - 123 456 Efg => 123-456-efg
+ * -  123 456 Efg  => 123-456-efg
+ */
+export const kebabCase = (value: string | null | undefined): string => {
+    if (!value) return "";
+
+    return value
+        .trim()
+        .replace(/([a-z])([A-Z])/g, "$1-$2") // get all lowercase letters that are near to uppercase ones
+        .replace(/[\s_]+/g, "-") // replace all spaces and low dash
+        .toLowerCase()
+};
+
+/**
+ * Utility to scroll to top in a smooth behaviour
+ */
+export const scrollToTop = (topOffset = 100) => {
+    window.scrollTo({
+        top: topOffset,
+        behavior: "smooth",
+    });
+};
+
+/**
+ * Count words in a string
+ * - "" => 0
+ * - "a" => 1
+ * - "a b" => 2
+ * - "a-b" => 1
+ * - null|undefined => 0
+ */
+export const countWords = (str: string | null | undefined): number => {
+    if (!str) return 0;
+    return str.split(" ").filter(function (n) {
+        return n != "";
+    }).length;
+};
+
+/**
+ * Count words from a html string
+ * - "" => 0
+ * - "a" => 1
+ * - "a b" => 2
+ * - "a-b" => 1
+ * - null|undefined => 0
+ * - "\<p>a\</p>" => 1
+ * - \<p>a b\</p> => 2
+ * - \<p>a-b\</p> => 1
+ * - \<p>\<span>f\</span>a b\</p> => 3
+ */
+export const countWordsFromHtml = (s: string | null | undefined): number => {
+    if (!s) return 0;
+    s = s.replace(/<\/?[^>]+(>|$)/g, " "); // strip tags
+    s = s.replace(/[.]{2,}/gi, " "); // 2 or more fullstops to 1
+    s = s.replace(/[ ]{2,}/gi, " "); // 2 or more space to 1
+    s = s.replace(/(^\s*)|(\s*$)/gi, ""); // exclude  start and end white-space
+    s = s.replace(/\n /, " "); // exclude newline with a start spacing
+    return s.split(" ").filter(function (str) {
+        return str != "";
+    }).length;
+};
+
+
+/**
+ * Get birthday
+ * - Date(today - 4 days) => 361  (362 if leap year)
+ * - Date(today + 4 days) => 3 
+ * - Date(today) => 0
+ * - null|undefined => null 
+ */
+export const birthdayFromNow = (date: Date | string | null | undefined): number | null => {
+    if (!date) return null;
+    if (!dayjs(date).isValid()) return null
+
+    let birthday = new Date(date);
+
+    const today = new Date();
+
+    // Set current year or the next year if you already had birthday this year
+    birthday.setFullYear(today.getFullYear());
+    if (today > birthday) {
+        birthday.setFullYear(today.getFullYear() + 1);
+    }
+
+    // Calculate difference between days
+    return Math.floor((birthday.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
 };
