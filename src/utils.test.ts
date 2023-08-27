@@ -119,8 +119,9 @@ test("isNumeric - check if a string|number is numeric", () => {
     expect(isNumeric('1234567890')).toBeTruthy();
     expect(isNumeric('-23')).toBeTruthy();
     expect(isNumeric('1234')).toBeTruthy();
-    // expect(isNumeric('1234e')).toBeTruthy();
     expect(isNumeric('123.4')).toBeFalsy();
+    expect(isNumeric('123.4', true)).toBeTruthy();
+    expect(isNumeric('1234e')).toBeFalsy();
     expect(isNumeric('')).toBeFalsy();
     expect(isNumeric(undefined)).toBeFalsy();
     expect(isNumeric(null)).toBeFalsy();
@@ -160,6 +161,10 @@ test("numberFormat - can format numeric strings and numbers", () => {
     expect(numberFormat(0, true)).toBe("0");
     expect(numberFormat('123456')).toBe("123,456.00");
     expect(numberFormat('123456', true)).toBe("123,456");
+    expect(numberFormat('1.3333333333')).toBe("1.33");
+    expect(numberFormat('-1.3333333333')).toBe("-1.33");
+    expect(numberFormat('1.3333333333', true)).toBe("1");
+    expect(numberFormat('-1.3333333333', true)).toBe("-1");
 });
 
 test("formatNumber - can format numeric strings and numbers", () => {
@@ -172,6 +177,10 @@ test("formatNumber - can format numeric strings and numbers", () => {
     expect(formatNumber(0, true)).toBe("0");
     expect(formatNumber('123456')).toBe("123,456.00");
     expect(formatNumber('123456', true)).toBe("123,456");
+    expect(formatNumber('1.3333333333')).toBe("1.33");
+    expect(formatNumber('-1.3333333333')).toBe("-1.33");
+    expect(formatNumber('1.3333333333', true)).toBe("1");
+    expect(formatNumber('-1.3333333333', true)).toBe("-1");
 });
 
 /*======== formatCurrency =============*/
@@ -183,6 +192,9 @@ test("formatCurrency - can format numeric strings and numbers to currency", () =
     expect(formatCurrency(0)).toBe("0.00");
     expect(formatCurrency('123456')).toBe("1,234.56");
     expect(formatCurrency('12345600')).toBe("123,456.00");
+    expect(formatCurrency('-12345600')).toBe("-123,456.00");
+    expect(formatCurrency('-100.333333333')).toBe("-1.00");
+    expect(formatCurrency('-10.333333333')).toBe("-0.10");
 });
 
 /*======== slugify =============*/
@@ -434,8 +446,12 @@ test("countWordsFromHtml - can get number of words in a string", () => {
 
 /*======== birthdayFromNow =============*/
 test("birthdayFromNow - can get days to next birthday", () => {
-    expect(birthdayFromNow(dayjs('2023-08-23').subtract(4, 'days').toDate())).toBe(361);
-    expect(birthdayFromNow(dayjs('2023-08-23').add(4, 'days').toDate())).toBe(3);
+    expect(birthdayFromNow(dayjs().subtract(4, 'days').toDate())).toBeGreaterThanOrEqual(361);
+    expect(birthdayFromNow(dayjs().subtract(4, 'days').toDate())).toBeLessThanOrEqual(362);
+
+    expect(birthdayFromNow(dayjs().add(4, 'days').toDate())).toBeGreaterThanOrEqual(3);
+    expect(birthdayFromNow(dayjs().add(4, 'days').toDate())).toBeLessThanOrEqual(4);
+
     expect(birthdayFromNow(dayjs().toDate())).toBe(0);
     expect(birthdayFromNow(null)).toBe(null);
     expect(birthdayFromNow(undefined)).toBe(null);

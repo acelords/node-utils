@@ -91,13 +91,16 @@ export const randomString = (length = 6, includeNumbers = false) => {
  * - isNumeric('1234')         // true
  * - isNumeric('1234n')         // true
  * - isNumeric('123.4')         // false
+ * - isNumeric('123.4', true)         // true
  * - isNumeric('')         // false
  * - isNumeric(undefined)         // false
  * - isNumeric(null)         // false
  */
-export function isNumeric(value: string | number | undefined | null): boolean {
+export function isNumeric(value: string | number | undefined | null, allowFloat = false): boolean {
     if (!value) return false;
-    return /^-?\d+$/.test(value.toString());
+    return allowFloat
+        ? /^-?\d+\.?\d*$/.test(value.toString())
+        : /^-?\d+$/.test(value.toString());
 }
 
 /**
@@ -136,7 +139,7 @@ export const substring = (str: string | null | undefined, end: number): string =
 export const numberFormat = (value: string | number | undefined | null, toInt = false): string => {
     const format = toInt ? '0,0' : "0,0.00"
     if (value === 0 || value === "0") return numeral(value).format(format)
-    if (!value || !isNumeric(value)) return ""
+    if (!value || !isNumeric(value, true)) return ""
     return numeral(value).format(format)
 }
 
@@ -167,7 +170,7 @@ export const formatNumber = (value: string | number | undefined | null, toInt = 
 export const formatCurrency = (value: string | number | undefined | null): string => {
     const format = "0,0.00"
     if (value === 0 || value === "0") return numeral(0).format(format)
-    if (!value || !isNumeric(value)) return ""
+    if (!value || !isNumeric(value, true)) return ""
     const amount = Number(value.toString()) / 100;
     return numeral(amount).format(format)
 }
