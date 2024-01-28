@@ -1,5 +1,5 @@
 # AceLords Node Utils
-Common utils for your node/js projects
+Common utils for your node, Javascript, and Typescript projects.
 
 ### Why this library?
 This libray focuses more on presentation aspects, not to be used in business logic. 
@@ -48,6 +48,7 @@ Available functions. [View the entire list here](https://github.com/acelords/nod
 - isEmpty()
 - ucwords()
 - capitalize()
+- camelCase()
 - camelCaseToSentenceCase()
 - snakeCaseToSentenceCase()
 - kebabCaseToSentenceCase()

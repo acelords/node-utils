@@ -1,7 +1,7 @@
 {
   "name": "@acelords/js-utils",
-  "version": "1.0.9",
-  "description": "Common utils and helpers used on node projects",
+  "version": "1.1.2",
+  "description": "Common utils and helpers used on node, Js and Ts projects",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "type": "module",
