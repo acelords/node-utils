@@ -38,6 +38,7 @@ Available functions. [View the entire list here](https://github.com/acelords/nod
 - formatCurrency()
 - slugify()
 - stripTags()
+- stripHtml()
 - plural()
 - singular()
 - pluralize()

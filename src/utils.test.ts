@@ -27,6 +27,7 @@ import {
   singular,
   slugify,
   snakeCaseToSentenceCase,
+  stripHtml,
   stripTags,
   substring,
   ucwords,
@@ -243,6 +244,25 @@ test("slugify - can return a sane slug from a string", () => {
 test("stripTags - can strip tags from a html string", () => {
   expect(stripTags("abcd")).toBe("abcd");
   expect(stripTags("<p>abcd</p>")).toBe("abcd");
+  expect(stripTags("<p>abcd &nbsp;</p>")).toBe("abcd &nbsp;");
+  expect(stripTags("<p>abcd &nbsp; &nbsp;</p>")).toBe("abcd &nbsp; &nbsp;");
+  expect(stripTags("<p>abcd <br/> &middot; karl</p>")).toBe(
+    "abcd &middot; karl"
+  );
+});
+
+/*======== stripHtml =============*/
+test("stripHtml - can strip html tags and other entities from a html string", () => {
+  expect(stripHtml("abcd")).toBe("abcd");
+  expect(stripHtml("<p>abcd</p>")).toBe("abcd");
+  expect(stripHtml("<p>abcd &nbsp;</p>")).toBe("abcd");
+  expect(stripHtml("<p>abcd &nbsp;  &nbsp;   &nbsp;</p>")).toBe("abcd");
+  expect(stripHtml("<p>abcd &nbsp; karl</p>")).toBe("abcd karl");
+  expect(stripHtml("<p>abcd [shortcode] karl</p>")).toBe("abcd karl");
+  expect(stripHtml("<p>abcd [shortcode karl</p>")).toBe("abcd [shortcode karl");
+  expect(stripHtml("<p>abcd <br/> karl</p>")).toBe("abcd karl");
+  expect(stripHtml("<p>abcd <br/> &middot; karl</p>")).toBe("abcd karl");
+  expect(stripHtml("<p>abcd <br/> &middot karl</p>")).toBe("abcd &middot karl");
 });
 
 /*======== plural =============*/

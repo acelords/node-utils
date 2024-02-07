@@ -224,11 +224,43 @@ export const slugify = (str: string | null | undefined): string => {
 
 /**
  * strip html tags an dimg tags from a html string
+ * - <p>abcd</p>  =>  abcd
+ * - <p>abcd</p> =>  abcd
+ * - <p>abcd &nbsp;</p> =>  abcd &nbsp;
+ * - <p>abcd &nbsp; &nbsp;</p> =>  abcd &nbsp;
+ * - <p>abcd <br/> &middot; karl</p> =>  abcd &middot; karl
  * @param htmlString string
  * @returns string
  */
 export const stripTags = (htmlString: string): string => {
-  return htmlString.replaceAll(/(<([^>]+)>)/gi, "").replace(/<img[^>]*>/gi, "");
+  return htmlString
+    .replaceAll(/(<([^>]+)>)/gi, "") // replace tags
+    .replace(/<img[^>]*>/gi, "") // replace img tags
+    .replace(/\s\s+/g, " "); // replace spaces, tabs, newlines with single
+};
+
+/**
+ * strip html tags an dimg tags from a html string
+ * - <p>abcd</p>  =>  abcd
+ * - <p>abcd &nbsp;</p>  =>  abcd
+ * - <p>abcd &nbsp;  &nbsp;   &nbsp;</p>  =>  abcd
+ * - <p>abcd &nbsp; karl</p>  =>  abcd karl
+ * - <p>abcd [shortcode] karl</p>  =>  abcd karl
+ * - <p>abcd [shortcode karl</p>  =>  abcd [shortcode karl
+ * - <p>abcd <br/> karl</p>  =>  abcd karl
+ * - <p>abcd <br/> &middot; karl</p>  =>  abcd karl
+ * - <p>abcd <br/> &middot karl</p>  =>  abcd &middot karl
+ * @param htmlString string
+ * @returns string
+ */
+export const stripHtml = (html: string): string => {
+  return html
+    .replace(/(<([^>]+)>)/gi, "")
+    .replace(/ *\[[^\]]*]/, "") // replace [shortcode]
+    .replace(/(&nbsp;|<br>|<br \/>)/g, "") // replace &nbsp; and <br> tags
+    .replace(/&.*;/, "") // replace html entities
+    .replace(/\s\s+/g, " ") // replace spaces, tabs, newlines with single
+    .trim();
 };
 
 /**
