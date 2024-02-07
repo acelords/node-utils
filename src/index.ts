@@ -629,3 +629,21 @@ export const birthdayFromNow = (
     (birthday.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
   );
 };
+
+/**
+ * Get random elements from an array
+ * Protects from taking more elements than the array length
+ * - [1,2,3,4,5], 2 => [3,1]
+ * - [1,2,3], 5 => [3,1,2]
+ */
+export const getRandomElementsFromArray = (
+  arr: Array<any>,
+  take = 1
+): Array<any> => {
+  // Shuffle array
+  const shuffled = arr.sort(() => 0.5 - Math.random());
+  const safeTake = take > arr.length ? arr.length : take;
+
+  // Get sub-array of first n elements after shuffled
+  return shuffled.slice(0, safeTake);
+};

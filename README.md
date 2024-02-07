@@ -60,6 +60,7 @@ Available functions. [View the entire list here](https://github.com/acelords/nod
 - countWordsFromHtml()
 - birthdayFromNow()
 - isPhoneNumber()
+- getRandomElementsFromArray()
 
 
 ## Sample Usages

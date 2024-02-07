@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import {
   birthdayFromNow,
   camelCase,
@@ -10,6 +11,7 @@ import {
   formatDateTime,
   formatNumber,
   fromNow,
+  getRandomElementsFromArray,
   getTimeFromDate,
   insertIntoArray,
   isEmail,
@@ -32,7 +34,6 @@ import {
   substring,
   ucwords,
 } from "./index";
-import dayjs from "dayjs";
 
 /*======== formatDate =============*/
 test("formatDate - can format a date in string format", () => {
@@ -544,4 +545,13 @@ test("birthdayFromNow - can get days to next birthday", () => {
   expect(birthdayFromNow(dayjs().toDate())).toBe(0);
   expect(birthdayFromNow(null)).toBe(null);
   expect(birthdayFromNow(undefined)).toBe(null);
+});
+
+/*======== getRandomelementsFromArray =============*/
+test("getRandomElementsFromArray - can get random elements from an array", () => {
+  expect(Array.isArray(getRandomElementsFromArray([1, 2, 3], 2))).toBeTruthy();
+  expect(Array.isArray(getRandomElementsFromArray([1, 2, 3], 5))).toBeTruthy();
+  expect(getRandomElementsFromArray([1, 2, 3], 2).length).toBe(2);
+  expect(getRandomElementsFromArray([1, 2, 3], 5).length).toBe(3);
+  expect(getRandomElementsFromArray([1, 2, 3]).length).toBe(1);
 });
