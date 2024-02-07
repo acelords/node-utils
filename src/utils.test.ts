@@ -554,4 +554,6 @@ test("getRandomElementsFromArray - can get random elements from an array", () =>
   expect(getRandomElementsFromArray([1, 2, 3], 2).length).toBe(2);
   expect(getRandomElementsFromArray([1, 2, 3], 5).length).toBe(3);
   expect(getRandomElementsFromArray([1, 2, 3]).length).toBe(1);
+  expect(getRandomElementsFromArray(["a", "b", "c"]).length).toBe(1);
+  expect(getRandomElementsFromArray(["a", "b", "c"], 2).length).toBe(2);
 });

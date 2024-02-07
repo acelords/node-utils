@@ -636,10 +636,10 @@ export const birthdayFromNow = (
  * - [1,2,3,4,5], 2 => [3,1]
  * - [1,2,3], 5 => [3,1,2]
  */
-export const getRandomElementsFromArray = (
-  arr: Array<any>,
+export const getRandomElementsFromArray = <T extends any>(
+  arr: Array<T>,
   take = 1
-): Array<any> => {
+): Array<T> => {
   // Shuffle array
   const shuffled = arr.sort(() => 0.5 - Math.random());
   const safeTake = take > arr.length ? arr.length : take;
