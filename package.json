@@ -1,6 +1,6 @@
 {
   "name": "@acelords/js-utils",
-  "version": "1.1.6",
+  "version": "1.1.7",
   "description": "Common utils and helpers used on node, Js and Ts projects",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -21,10 +21,13 @@
     "helpers"
   ],
   "author": "AceLords <info@acelords.com> (https://acelords.com)",
+  "contributors": [
+    "SyntaxLexx <syntaxlexx@gmail.com> (https://twitter.com/syntaxlexx)"
+  ],
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/acelords/node-utils"
+    "url": "git+https://github.com/acelords/node-utils.git"
   },
   "bugs": {
     "url": "https://github.com/acelords/node-utils/issues"

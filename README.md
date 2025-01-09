@@ -61,6 +61,7 @@ Available functions. [View the entire list here](https://github.com/acelords/nod
 - birthdayFromNow()
 - isPhoneNumber()
 - getRandomElementsFromArray()
+- isChristmasTime()
 
 
 ## Sample Usages

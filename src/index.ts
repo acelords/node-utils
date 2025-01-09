@@ -647,3 +647,33 @@ export const getRandomElementsFromArray = <T extends any>(
   // Get sub-array of first n elements after shuffled
   return shuffled.slice(0, safeTake);
 };
+
+/**
+ * Check if it's Christmas time
+ * @param decemberStartDay e.g. 23   -> 23rd December
+ * @param januaryNextYearEndDay e.g. 5th -> 5th January
+ * @param dateToCheck e.g. new Date() -> Date to check
+ * @returns
+ */
+export const isChristmasTime = (args?: {
+  decemberStartDay?: number;
+  januaryNextYearEndDay?: number;
+  dateToCheck?: Date;
+}): boolean => {
+  const decemberStartDay = args?.decemberStartDay || 23; // 23rd dec
+  const januaryNextYearEndDay = args?.januaryNextYearEndDay || 5; // 5th jan
+  const dateToCheck = args?.dateToCheck || new Date();
+
+  // prior
+  const dateFrom = new Date(new Date().getFullYear(), 11, decemberStartDay);
+  const dateTo = new Date(new Date().getFullYear() + 1, 0, 1); // 1st jan
+
+  // after
+  const dateFrom2 = new Date(new Date().getFullYear(), 0, 1); // 1st jan
+  const dateTo2 = new Date(new Date().getFullYear(), 0, januaryNextYearEndDay);
+
+  return (
+    (dateToCheck >= dateFrom && dateToCheck <= dateTo) ||
+    (dateToCheck >= dateFrom2 && dateToCheck <= dateTo2)
+  );
+};

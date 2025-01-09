@@ -33,6 +33,7 @@ import {
   stripTags,
   substring,
   ucwords,
+  isChristmasTime,
 } from "./index";
 
 /*======== formatDate =============*/
@@ -556,4 +557,38 @@ test("getRandomElementsFromArray - can get random elements from an array", () =>
   expect(getRandomElementsFromArray([1, 2, 3]).length).toBe(1);
   expect(getRandomElementsFromArray(["a", "b", "c"]).length).toBe(1);
   expect(getRandomElementsFromArray(["a", "b", "c"], 2).length).toBe(2);
+});
+
+/*======== isChristmasTime =============*/
+test("isChristmasTime - can check if it's christmas time", () => {
+  expect(
+    isChristmasTime({ dateToCheck: new Date(new Date().getFullYear(), 11, 25) })
+  ).toBe(true);
+  expect(
+    isChristmasTime({ dateToCheck: new Date(new Date().getFullYear(), 10, 25) })
+  ).toBe(false);
+  expect(
+    isChristmasTime({ dateToCheck: new Date(new Date().getFullYear(), 0, 1) })
+  ).toBe(true);
+  expect(
+    isChristmasTime({
+      dateToCheck: new Date(new Date().getFullYear(), 0, 2),
+      decemberStartDay: 29,
+      januaryNextYearEndDay: 1,
+    })
+  ).toBe(false);
+  expect(
+    isChristmasTime({
+      dateToCheck: new Date(new Date().getFullYear(), 11, 2),
+      decemberStartDay: 1,
+      januaryNextYearEndDay: 1,
+    })
+  ).toBe(true);
+  expect(
+    isChristmasTime({
+      dateToCheck: new Date(new Date().getFullYear(), 10, 2),
+      decemberStartDay: 1,
+      januaryNextYearEndDay: 1,
+    })
+  ).toBe(false);
 });
