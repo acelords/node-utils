@@ -677,3 +677,76 @@ export const isChristmasTime = (args?: {
     (dateToCheck >= dateFrom2 && dateToCheck <= dateTo2)
   );
 };
+
+
+/**
+ * convert a value to a boolean
+ * - "true" => true
+ * - "false" => false
+ * - "1" => true
+ * - "0" => false
+ * - "yes" => true
+ * - "no" => false
+ * - "on" => true
+ * - default => false
+ */
+export const boolean = function (value: any): boolean {
+  switch (Object.prototype.toString.call(value)) {
+    case "[object String]":
+      return ["true", "t", "yes", "y", "on", "1"].includes(
+        value.trim().toLowerCase()
+      );
+
+    case "[object Number]":
+      return value.valueOf() === 1;
+
+    case "[object Boolean]":
+      return value.valueOf();
+
+    default:
+      return false;
+  }
+};
+
+/**
+ * Check if a value is booleanable
+ * - "true" => true
+ * - "false" => false
+ * - "1" => true
+ * - "0" => false
+ * - "yes" => true
+ * - "no" => false
+ * - "on" => true
+ * - "off" => false
+ * - "n" => false
+ * - "f" => false
+ * - default => false
+ */
+export const isBooleanable = function (value: any): boolean {
+  switch (Object.prototype.toString.call(value)) {
+    case "[object String]":
+      return [
+        "true",
+        "t",
+        "yes",
+        "y",
+        "on",
+        "1",
+        "false",
+        "f",
+        "no",
+        "n",
+        "off",
+        "0",
+      ].includes(value.trim().toLowerCase());
+
+    case "[object Number]":
+      return [0, 1].includes(value.valueOf());
+
+    case "[object Boolean]":
+      return true;
+
+    default:
+      return false;
+  }
+};

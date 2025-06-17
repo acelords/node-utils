@@ -62,6 +62,8 @@ Available functions. [View the entire list here](https://github.com/acelords/nod
 - isPhoneNumber()
 - getRandomElementsFromArray()
 - isChristmasTime()
+- boolean()
+- isBooleanable()
 
 
 ## Sample Usages
@@ -107,7 +109,7 @@ npm t
 ```
 
 ### Publish to NPM
-Before publishing, remember to INCREMENT Versioning and also BUILD it
+Before publishing, remember to INCREMENT Versioning (in `package.json`) and also BUILD it
 
 ```bash
 npm run build && npm publish --access public 

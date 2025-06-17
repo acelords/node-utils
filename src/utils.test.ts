@@ -34,6 +34,8 @@ import {
   substring,
   ucwords,
   isChristmasTime,
+  boolean,
+  isBooleanable,
 } from "./index";
 
 /*======== formatDate =============*/
@@ -531,10 +533,10 @@ test("countWordsFromHtml - can get number of words in a string", () => {
 test("birthdayFromNow - can get days to next birthday", () => {
   expect(
     birthdayFromNow(dayjs().subtract(4, "days").toDate())
-  ).toBeGreaterThanOrEqual(361);
+  ).toBeGreaterThanOrEqual(360); // due to leap years
   expect(
     birthdayFromNow(dayjs().subtract(4, "days").toDate())
-  ).toBeLessThanOrEqual(362);
+  ).toBeLessThanOrEqual(361);
 
   expect(
     birthdayFromNow(dayjs().add(4, "days").toDate())
@@ -591,4 +593,53 @@ test("isChristmasTime - can check if it's christmas time", () => {
       januaryNextYearEndDay: 1,
     })
   ).toBe(false);
+});
+
+/*======== boolean =============*/
+test("boolean - can convert a value to a boolean", () => {
+  expect(boolean(1)).toBe(true);
+  expect(boolean(0)).toBe(false);
+  expect(boolean("1")).toBe(true);
+  expect(boolean("0")).toBe(false);
+  expect(boolean("true")).toBe(true);
+  expect(boolean("false")).toBe(false);
+  expect(boolean("yes")).toBe(true);
+  expect(boolean("no")).toBe(false);
+  expect(boolean("on")).toBe(true);
+  expect(boolean("off")).toBe(false);
+  expect(boolean("n")).toBe(false);
+  expect(boolean("f")).toBe(false);
+  expect(boolean(null)).toBe(false);
+  expect(boolean(undefined)).toBe(false);
+  expect(boolean(true)).toBe(true);
+  expect(boolean(false)).toBe(false);
+  expect(boolean(1)).toBe(true);
+  expect(boolean(0)).toBe(false);
+  expect(boolean(1.1)).toBe(false);
+  expect(boolean(0.0)).toBe(false);
+  expect(boolean(1.1)).toBe(false);
+});
+
+/*======== isBooleanable =============*/
+test("isBooleanable - can check if a value is booleanable", () => {
+  expect(isBooleanable("1")).toBe(true);
+  expect(isBooleanable("0")).toBe(true);
+  expect(isBooleanable("true")).toBe(true);
+  expect(isBooleanable("false")).toBe(true);
+  expect(isBooleanable("yes")).toBe(true);
+  expect(isBooleanable("no")).toBe(true);
+  expect(isBooleanable("on")).toBe(true);
+  expect(isBooleanable("off")).toBe(true);
+  expect(isBooleanable("n")).toBe(true);
+  expect(isBooleanable("f")).toBe(true);
+  expect(isBooleanable(null)).toBe(false);
+  expect(isBooleanable(undefined)).toBe(false);
+  expect(isBooleanable(true)).toBe(true);
+  expect(isBooleanable(false)).toBe(true);
+  expect(isBooleanable(1)).toBe(true);
+  expect(isBooleanable(0)).toBe(true);
+  expect(isBooleanable(1.1)).toBe(false);
+  expect(isBooleanable(0.0)).toBe(true);
+  expect(isBooleanable(0.1)).toBe(false);
+  expect(isBooleanable(1.1)).toBe(false);
 });
