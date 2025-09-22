@@ -64,6 +64,8 @@ Available functions. [View the entire list here](https://github.com/acelords/nod
 - isChristmasTime()
 - boolean()
 - isBooleanable()
+- ordinalSuffix()
+- nthNumber()
 
 
 ## Sample Usages

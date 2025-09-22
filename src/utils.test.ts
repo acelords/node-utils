@@ -36,6 +36,8 @@ import {
   isChristmasTime,
   boolean,
   isBooleanable,
+  ordinalSuffix,
+  nthNumber,
 } from "./index";
 
 /*======== formatDate =============*/
@@ -642,4 +644,34 @@ test("isBooleanable - can check if a value is booleanable", () => {
   expect(isBooleanable(0.0)).toBe(true);
   expect(isBooleanable(0.1)).toBe(false);
   expect(isBooleanable(1.1)).toBe(false);
+});
+
+/*======== ordinalSuffix =============*/
+test("ordinalSuffix - can get the ordinal suffix for a number", () => {
+  expect(ordinalSuffix(1)).toBe("st");
+  expect(ordinalSuffix(2)).toBe("nd");
+  expect(ordinalSuffix(3)).toBe("rd");
+  expect(ordinalSuffix(4)).toBe("th");
+  expect(ordinalSuffix(5)).toBe("th");
+  expect(ordinalSuffix(6)).toBe("th");
+  expect(ordinalSuffix(7)).toBe("th");
+  expect(ordinalSuffix(21)).toBe("st");
+  expect(ordinalSuffix(22)).toBe("nd");
+  expect(ordinalSuffix(23)).toBe("rd");
+  expect(ordinalSuffix(24)).toBe("th");
+});
+
+/*======== ordinalSuffix =============*/
+test("nthNumber - can get the ordinal number with suffix for a number", () => {
+  expect(nthNumber(1)).toBe("1st");
+  expect(nthNumber(2)).toBe("2nd");
+  expect(nthNumber(3)).toBe("3rd");
+  expect(nthNumber(4)).toBe("4th");
+  expect(nthNumber(5)).toBe("5th");
+  expect(nthNumber(6)).toBe("6th");
+  expect(nthNumber(7)).toBe("7th");
+  expect(nthNumber(21)).toBe("21st");
+  expect(nthNumber(22)).toBe("22nd");
+  expect(nthNumber(23)).toBe("23rd");
+  expect(nthNumber(24)).toBe("24th");
 });

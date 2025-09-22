@@ -678,7 +678,6 @@ export const isChristmasTime = (args?: {
   );
 };
 
-
 /**
  * convert a value to a boolean
  * - "true" => true
@@ -749,4 +748,36 @@ export const isBooleanable = function (value: any): boolean {
     default:
       return false;
   }
+};
+
+/**
+ * Get the ordinal suffix for a number
+ * - 1 => "st"
+ * - 2 => "nd"
+ * - 3 => "rd"
+ * - 4 => "th"
+ */
+export const ordinalSuffix = (number: number): string => {
+  if (number > 3 && number < 21) return "th";
+  switch (number % 10) {
+    case 1:
+      return "st";
+    case 2:
+      return "nd";
+    case 3:
+      return "rd";
+    default:
+      return "th";
+  }
+};
+
+/**
+ * Get the number with ordinal suffix for a number
+ * - 1 => "1st"
+ * - 2 => "2nd"
+ * - 3 => "3rd"
+ * - 4 => "4th"
+ */
+export const nthNumber = (number: number): string => {
+  return number + ordinalSuffix(number);
 };
