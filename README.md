@@ -66,6 +66,7 @@ Available functions. [View the entire list here](https://github.com/acelords/nod
 - isBooleanable()
 - ordinalSuffix()
 - nthNumber()
+- generateStrongPassword()
 
 
 ## Sample Usages

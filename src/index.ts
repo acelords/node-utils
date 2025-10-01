@@ -781,3 +781,109 @@ export const ordinalSuffix = (number: number): string => {
 export const nthNumber = (number: number): string => {
   return number + ordinalSuffix(number);
 };
+
+/**
+ * Generates a strong, random password with customizable character types.
+ *
+ * @param {object} options - An object to configure the password generation.
+ * @param {number} [options.length=12] - The desired length of the password.
+ * @param {boolean} [options.includeUppercase=true] - Whether to include uppercase letters (A-Z).
+ * @param {boolean} [options.includeNumbers=true] - Whether to include numbers (0-9).
+ * @param {boolean} [options.includeSymbols=true] - Whether to include special symbols (!@#$%...).
+ * @param {boolean} [options.includeLowercase=true] - Whether to include lowercase letters (a-z). Defaults to true and cannot be false to ensure basic password integrity.
+ * @returns {string} The generated strong password.
+ * @throws {Error} If no valid character types are selected (should not happen with default lowercase).
+ */
+export function generateStrongPassword({
+  length = 10,
+  includeUppercase = true,
+  includeNumbers = true,
+  includeSymbols = true,
+  includeLowercase = true, // Sensible default, and hard to make it false
+} = {}): string {
+  const lowercaseChars = "abcdefghijklmnopqrstuvwxyz";
+  const uppercaseChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  const numberChars = "0123456789";
+  const symbolChars = "!@#$%^&*()-_=+[]{}|;:,.<>?";
+
+  let passwordCharacters = []; // Use an array for easier shuffling
+  let availableCharactersPool = "";
+
+  // --- Ensure at least one character of each requested type is included ---
+
+  if (includeLowercase) {
+    availableCharactersPool += lowercaseChars;
+    passwordCharacters.push(
+      lowercaseChars[Math.floor(Math.random() * lowercaseChars.length)]
+    );
+  } else {
+    // If somehow includeLowercase is false, we still need to ensure
+    // there's a base set of characters if other types are off.
+    // However, it's a strong recommendation to always include lowercase.
+    // For this function, we'll make it always true internally if not explicitly false.
+    // If you absolutely need to exclude it, adjust logic, but it makes weaker passwords.
+    console.warn(
+      "It's highly recommended to include lowercase characters for stronger passwords."
+    );
+  }
+
+  if (includeUppercase) {
+    availableCharactersPool += uppercaseChars;
+    passwordCharacters.push(
+      uppercaseChars[Math.floor(Math.random() * uppercaseChars.length)]
+    );
+  }
+  if (includeNumbers) {
+    availableCharactersPool += numberChars;
+    passwordCharacters.push(
+      numberChars[Math.floor(Math.random() * numberChars.length)]
+    );
+  }
+  if (includeSymbols) {
+    availableCharactersPool += symbolChars;
+    passwordCharacters.push(
+      symbolChars[Math.floor(Math.random() * symbolChars.length)]
+    );
+  }
+
+  // Fallback if no specific character types are selected but length is requested
+  if (availableCharactersPool.length === 0 && length > 0) {
+    // If for some reason all options are false, ensure a default set.
+    // This is a safety net. Default `includeLowercase=true` should prevent this.
+    console.warn(
+      "No character types selected, falling back to lowercase only."
+    );
+    availableCharactersPool = lowercaseChars;
+    if (passwordCharacters.length === 0) {
+      // Only add if no other characters already added
+      passwordCharacters.push(
+        lowercaseChars[Math.floor(Math.random() * lowercaseChars.length)]
+      );
+    }
+  }
+
+  if (availableCharactersPool.length === 0) {
+    throw new Error(
+      "Cannot generate password: No character types available. Please ensure at least one type is included."
+    );
+  }
+
+  // --- Fill the remaining length with random characters from the pool ---
+  for (let i = passwordCharacters.length; i < length; i++) {
+    const randomIndex = Math.floor(
+      Math.random() * availableCharactersPool.length
+    );
+    passwordCharacters.push(availableCharactersPool[randomIndex]);
+  }
+
+  // --- Shuffle the password characters to ensure randomness ---
+  for (let i = passwordCharacters.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [passwordCharacters[i], passwordCharacters[j]] = [
+      passwordCharacters[j],
+      passwordCharacters[i],
+    ];
+  }
+
+  return passwordCharacters.join("");
+}

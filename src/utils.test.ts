@@ -38,6 +38,7 @@ import {
   isBooleanable,
   ordinalSuffix,
   nthNumber,
+  generateStrongPassword,
 } from "./index";
 
 /*======== formatDate =============*/
@@ -674,4 +675,26 @@ test("nthNumber - can get the ordinal number with suffix for a number", () => {
   expect(nthNumber(22)).toBe("22nd");
   expect(nthNumber(23)).toBe("23rd");
   expect(nthNumber(24)).toBe("24th");
+});
+
+/*======== generateStrongPassword =============*/
+test("generateStrongPassword - can generate a strong password", () => {
+  expect(generateStrongPassword().length).toBe(10);
+  expect(generateStrongPassword({ length: 12 }).length).toBe(12);
+
+  const password = generateStrongPassword({
+    length: 15,
+    includeUppercase: false,
+    includeNumbers: true, // Keep other types to ensure generation
+    includeSymbols: true,
+    includeLowercase: true,
+  });
+
+  expect(password).not.toMatch(/[A-Z]/);
+
+  // Also verify length and other included types if desired
+  expect(password.length).toBe(15);
+  expect(password).toMatch(/[a-z]/); // Should have lowercase
+  expect(password).toMatch(/[0-9]/); // Should have numbers
+  expect(password).toMatch(/[!@#$%^&*()-_=+\[\]{}|;:,.<>?]/); // Should have symbols
 });
