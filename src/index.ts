@@ -46,6 +46,49 @@ export const formatDateTime = (
 };
 
 /**
+ * Get the difference in days between two dates
+ * - from 8 Oct, 2020 to 8 Oct, 2020 => 0
+ * - from 8 Oct, 2020 to 9 Oct, 2020 => 1
+ * - from 8 Oct, 2020 to 10 Oct, 2020 => 2
+ * - null|undefined => 0
+ */
+export const daysDiff = (
+  from: Date | string | null | undefined,
+  to: Date | string | null | undefined
+): number => {
+  if (!from || !to) return 0;
+  const date1 = dayjs(from);
+  const date2 = dayjs(to);
+  return Math.abs(date1.diff(date2, "day"));
+};
+
+/**
+ * Get the difference in days between two dates
+ * - from 8 Oct, 2020 to 8 Oct, 2020 => 0
+ * - from 8 Oct, 2020 to 9 Oct, 2020 => 1
+ * - from 8 Oct, 2020 to 10 Oct, 2020 => 2
+ * - null|undefined => 0
+ */
+export const dateDiff = (
+  from: Date | string | null | undefined,
+  to: Date | string | null | undefined,
+  unit:
+    | "day"
+    | "hour"
+    | "minute"
+    | "second"
+    | "millisecond"
+    | "quarter"
+    | "month"
+    | "year"
+): number => {
+  if (!from || !to) return 0;
+  const date1 = dayjs(from);
+  const date2 = dayjs(to);
+  return Math.abs(date1.diff(date2, unit));
+};
+
+/**
  * return 24-hour time from an  ISO 8601  date. Default format: "HH:mm"
  * - date => 21:04
  * - 1692803186 => 16:04

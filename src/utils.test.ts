@@ -39,6 +39,8 @@ import {
   ordinalSuffix,
   nthNumber,
   generateStrongPassword,
+  dateDiff,
+  daysDiff,
 } from "./index";
 
 /*======== formatDate =============*/
@@ -105,6 +107,46 @@ test("formatDateTime - returns empty string on invalid date", () => {
   expect(formatDateTime("abc")).toBe("");
   expect(formatDateTime("1000")).toBe("");
   expect(formatDateTime("Jan 14, 1000")).toBe("");
+});
+
+/*======== daysDiff =============*/
+test("dateDiff - can get the difference in days between two dates", () => {
+  expect(daysDiff("2020-01-01", "2020-01-01")).toBe(0);
+  expect(daysDiff("2020-01-01", "2020-01-02")).toBe(1);
+  expect(daysDiff("2020-01-01", "2020-02-01")).toBe(31);
+  expect(daysDiff("2021-01-01", "2022-01-01")).toBe(365);
+  expect(daysDiff("2020-01-01", "2021-01-01")).toBe(366);
+
+  expect(daysDiff(new Date("2020-01-01"), new Date("2020-01-01"))).toBe(0);
+  expect(daysDiff(new Date("2020-01-01"), new Date("2020-01-02"))).toBe(1);
+  expect(daysDiff(new Date("2020-01-01"), new Date("2020-02-01"))).toBe(31);
+  expect(daysDiff(new Date("2021-01-01"), new Date("2022-01-01"))).toBe(365);
+  expect(daysDiff(new Date("2020-01-01"), new Date("2021-01-01"))).toBe(366);
+});
+
+/*======== dateDiff =============*/
+test("dateDiff - can get the difference in days between two dates", () => {
+  expect(dateDiff("2020-01-01", "2020-01-02", "day")).toBe(1);
+  expect(dateDiff("2020-01-01", "2020-02-01", "day")).toBe(31);
+  expect(dateDiff("2020-01-01", "2020-02-01", "month")).toBe(1);
+  expect(dateDiff("2020-01-01", "2020-02-01", "year")).toBe(0);
+  expect(dateDiff("2020-01-01", "2022-02-01", "year")).toBe(2);
+
+  expect(dateDiff(new Date("2020-01-01"), new Date("2020-01-02"), "day")).toBe(
+    1
+  );
+  expect(dateDiff(new Date("2020-01-01"), new Date("2020-02-01"), "day")).toBe(
+    31
+  );
+  expect(
+    dateDiff(new Date("2020-01-01"), new Date("2020-02-01"), "month")
+  ).toBe(1);
+  expect(dateDiff(new Date("2020-01-01"), new Date("2020-02-01"), "year")).toBe(
+    0
+  );
+  expect(dateDiff(new Date("2020-01-01"), new Date("2022-02-01"), "year")).toBe(
+    2
+  );
 });
 
 /*======== getTimeFromDate =============*/
