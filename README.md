@@ -32,6 +32,8 @@ Available functions. [View the entire list here](https://github.com/acelords/nod
 - randomString()
 - isNumeric()
 - fromNow()
+- daysDiff()
+- dateDiff()
 - substring()
 - numberFormat()
 - formatNumber()
