@@ -41,6 +41,8 @@ import {
   generateStrongPassword,
   dateDiff,
   daysDiff,
+  daysFromNow,
+  getInitials,
 } from "./index";
 
 /*======== formatDate =============*/
@@ -122,6 +124,15 @@ test("dateDiff - can get the difference in days between two dates", () => {
   expect(daysDiff(new Date("2020-01-01"), new Date("2020-02-01"))).toBe(31);
   expect(daysDiff(new Date("2021-01-01"), new Date("2022-01-01"))).toBe(365);
   expect(daysDiff(new Date("2020-01-01"), new Date("2021-01-01"))).toBe(366);
+});
+
+/*======== daysFromNow =============*/
+test("daysFromNow - can get the difference in days from current day", () => {
+  expect(daysFromNow(dayjs().toDate())).toBe('today')
+  expect(daysFromNow(dayjs().add(1, 'day').toDate())).toBe('in 1 day')
+  expect(daysFromNow(dayjs().subtract(1, 'day').toDate())).toBe('1 day ago')
+  expect(daysFromNow(dayjs().subtract(4, 'day').toDate())).toBe('4 days ago')
+  expect(daysFromNow(dayjs().add(4, 'day').toDate())).toBe('in 4 days')
 });
 
 /*======== dateDiff =============*/
@@ -739,4 +750,19 @@ test("generateStrongPassword - can generate a strong password", () => {
   expect(password).toMatch(/[a-z]/); // Should have lowercase
   expect(password).toMatch(/[0-9]/); // Should have numbers
   expect(password).toMatch(/[!@#$%^&*()-_=+\[\]{}|;:,.<>?]/); // Should have symbols
+});
+
+
+/*======== getInitials =============*/
+test("getInitials - can get initials from a name", () => {
+  expect(getInitials("John Doe")).toBe("JD");
+  expect(getInitials("John")).toBe("J");
+  expect(getInitials("John Doe Jane")).toBe("JDJ");
+  expect(getInitials("John Doe Jane", 2)).toBe("JD");
+  expect(getInitials("John Doe Jane", 3)).toBe("JDJ");
+  expect(getInitials("John Doe Jane", 1)).toBe("J");
+  expect(getInitials("John", 3)).toBe("J");
+  expect(getInitials(null)).toBe("-");
+  expect(getInitials(undefined)).toBe("-");
+  expect(getInitials(""))
 });

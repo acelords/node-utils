@@ -33,6 +33,7 @@ Available functions. [View the entire list here](https://github.com/acelords/nod
 - isNumeric()
 - fromNow()
 - daysDiff()
+- daysFromNow()
 - dateDiff()
 - substring()
 - numberFormat()
@@ -69,6 +70,7 @@ Available functions. [View the entire list here](https://github.com/acelords/nod
 - ordinalSuffix()
 - nthNumber()
 - generateStrongPassword()
+- getInitials()
 
 
 ## Sample Usages

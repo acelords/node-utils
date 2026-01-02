@@ -63,6 +63,26 @@ export const daysDiff = (
 };
 
 /**
+ * Get how many days from now a date is
+ * - 7 Oct, 2020 => "today"
+ * - 8 Oct, 2020 => "in 1 day"
+ * - 10 Oct, 2020 => "in 3 days"
+ * - 6 Oct, 2020 => "1 day ago"
+ * - 3 Oct, 2020 => "4 days ago"
+ * - null|undefined => ""
+ */
+export const daysFromNow = (date: Date | string | null | undefined): string => {
+  if (!date) return "";
+  const date1 = dayjs(date);
+  const date2 = dayjs();
+  const days = date1.diff(date2, "day");
+  if (days == 0) return "today";
+  return days > 0
+    ? `in ${days} ${pluralizeLib("day", days)}`
+    : `${Math.abs(days)} ${pluralizeLib("day", Math.abs(days))} ago`;
+};
+
+/**
  * Get the difference in days between two dates
  * - from 8 Oct, 2020 to 8 Oct, 2020 => 0
  * - from 8 Oct, 2020 to 9 Oct, 2020 => 1
@@ -518,8 +538,8 @@ export const snakeCaseToSentenceCase = (
   value = value.replace(/([A-Z])/g, " $1");
   return capitalizeWords
     ? value.replace(/\b\w/g, function (l) {
-        return l.toUpperCase();
-      })
+      return l.toUpperCase();
+    })
     : value.charAt(0).toUpperCase() + value.slice(1); // capitalize the first letter - as an example.
 };
 
@@ -930,3 +950,31 @@ export function generateStrongPassword({
 
   return passwordCharacters.join("");
 }
+
+/**
+ * Get initials for a user. Can also specify the length of the initials.
+ * - John Doe => "JD"
+ * - John => "J"
+ * - John Doe Jane => "JDJ"
+ * - null|undefined => "-"
+ * - "" => "-"
+ * - "John Doe Jane", 2 => "JD"
+ * - "John Doe Jane", 3 => "JDJ"
+ * - "John Doe Jane", 1 => "J"
+ * - "John", 3 => "J"
+ */
+export const getInitials = (
+  names: string | undefined | null,
+  length?: number
+): string => {
+  if (!names || names.trim().length === 0) return "-";
+
+  const initials = names
+    .trim()
+    .split(/\s+/)
+    .filter((word) => word.length > 0)
+    .map((word) => word.charAt(0).toUpperCase())
+    .join("");
+
+  return length ? initials.slice(0, length) : initials;
+};
