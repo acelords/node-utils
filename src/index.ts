@@ -1,7 +1,8 @@
-import numeral from "numeral";
-import pluralizeLib from "pluralize";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime.js";
+import numeral from "numeral";
+import pluralizeLib from "pluralize";
+
 dayjs.extend(relativeTime);
 
 const MIN_TIMESTAMP = 75600000;
@@ -15,16 +16,16 @@ const MIN_DATE = "January 2, 1970";
  * - 1602162242 => 8 Oct, 2020
  */
 export const formatDate = (
-  dt: Date | string | number | null | undefined,
-  format = "D MMM, YYYY"
+	dt: Date | string | number | null | undefined,
+	format = "D MMM, YYYY",
 ): string => {
-  if (!dt) return "";
-  if (isNumeric(dt.toString())) {
-    if (Number(dt) < MIN_TIMESTAMP) return "";
-    return dayjs.unix(Number(dt)).format(format);
-  }
-  if (!dayjs(dt).isValid() || dayjs(dt).isBefore(MIN_DATE)) return "";
-  return dayjs(dt).format(format);
+	if (!dt) return "";
+	if (isNumeric(dt.toString())) {
+		if (Number(dt) < MIN_TIMESTAMP) return "";
+		return dayjs.unix(Number(dt)).format(format);
+	}
+	if (!dayjs(dt).isValid() || dayjs(dt).isBefore(MIN_DATE)) return "";
+	return dayjs(dt).format(format);
 };
 
 /**
@@ -33,16 +34,37 @@ export const formatDate = (
  * - 1602162242 => 8 Oct, 2020 1:04 pm
  */
 export const formatDateTime = (
-  dt: Date | string | number | null | undefined,
-  format = "D MMM, YYYY hh:mm a"
+	dt: Date | string | number | null | undefined,
+	format = "D MMM, YYYY hh:mm a",
 ): string => {
-  if (!dt) return "";
-  if (isNumeric(dt.toString())) {
-    if (Number(dt) < MIN_TIMESTAMP) return "";
-    return dayjs.unix(Number(dt)).format(format);
-  }
-  if (!dayjs(dt).isValid() || dayjs(dt).isBefore(MIN_DATE)) return "";
-  return dayjs(dt).format(format);
+	if (!dt) return "";
+	if (isNumeric(dt.toString())) {
+		if (Number(dt) < MIN_TIMESTAMP) return "";
+		return dayjs.unix(Number(dt)).format(format);
+	}
+	if (!dayjs(dt).isValid() || dayjs(dt).isBefore(MIN_DATE)) return "";
+	return dayjs(dt).format(format);
+};
+
+/**
+ * Check how long a date is from now. 
+ * NB: 1602162242 is a Unix timestamp in seconds.
+ * - date => 2 days ago
+ * - date => in 2 days
+ * - 1602162242 => 7 years ago
+* - null|undefined => ""
+ */
+export const fromNow = (
+	date: Date | string | number | null | undefined,
+	addSuffix = undefined,
+): string => {
+	if (!date) return "";
+	if (isNumeric(date.toString())) {
+		if (Number(date) < MIN_TIMESTAMP) return "";
+		return dayjs.unix(Number(date)).fromNow(addSuffix);
+	}
+	if (!dayjs(date).isValid()) return "";
+	return dayjs(date).fromNow(addSuffix);
 };
 
 /**
@@ -53,13 +75,13 @@ export const formatDateTime = (
  * - null|undefined => 0
  */
 export const daysDiff = (
-  from: Date | string | null | undefined,
-  to: Date | string | null | undefined
+	from: Date | string | null | undefined,
+	to: Date | string | null | undefined,
 ): number => {
-  if (!from || !to) return 0;
-  const date1 = dayjs(from);
-  const date2 = dayjs(to);
-  return Math.abs(date1.diff(date2, "day"));
+	if (!from || !to) return 0;
+	const date1 = dayjs(from);
+	const date2 = dayjs(to);
+	return Math.abs(date1.diff(date2, "day"));
 };
 
 /**
@@ -72,14 +94,14 @@ export const daysDiff = (
  * - null|undefined => ""
  */
 export const daysFromNow = (date: Date | string | null | undefined): string => {
-  if (!date) return "";
-  const date1 = dayjs(date);
-  const date2 = dayjs();
-  const days = date1.diff(date2, "day");
-  if (days == 0) return "today";
-  return days > 0
-    ? `in ${days} ${pluralizeLib("day", days)}`
-    : `${Math.abs(days)} ${pluralizeLib("day", Math.abs(days))} ago`;
+	if (!date) return "";
+	const date1 = dayjs(date);
+	const date2 = dayjs();
+	const days = date1.diff(date2, "day");
+	if (days === 0) return "today";
+	return days > 0
+		? `in ${days} ${pluralizeLib("day", days)}`
+		: `${Math.abs(days)} ${pluralizeLib("day", Math.abs(days))} ago`;
 };
 
 /**
@@ -90,22 +112,22 @@ export const daysFromNow = (date: Date | string | null | undefined): string => {
  * - null|undefined => 0
  */
 export const dateDiff = (
-  from: Date | string | null | undefined,
-  to: Date | string | null | undefined,
-  unit:
-    | "day"
-    | "hour"
-    | "minute"
-    | "second"
-    | "millisecond"
-    | "quarter"
-    | "month"
-    | "year"
+	from: Date | string | null | undefined,
+	to: Date | string | null | undefined,
+	unit:
+		| "day"
+		| "hour"
+		| "minute"
+		| "second"
+		| "millisecond"
+		| "quarter"
+		| "month"
+		| "year",
 ): number => {
-  if (!from || !to) return 0;
-  const date1 = dayjs(from);
-  const date2 = dayjs(to);
-  return Math.abs(date1.diff(date2, unit));
+	if (!from || !to) return 0;
+	const date1 = dayjs(from);
+	const date2 = dayjs(to);
+	return Math.abs(date1.diff(date2, unit));
 };
 
 /**
@@ -114,15 +136,15 @@ export const dateDiff = (
  * - 1692803186 => 16:04
  */
 export const getTimeFromDate = (
-  dt: string | number | Date,
-  format = "HH:mm"
+	dt: string | number | Date,
+	format = "HH:mm",
 ): string => {
-  if (isNumeric(dt.toString())) {
-    if (Number(dt) < MIN_TIMESTAMP) return "";
-    return dayjs.unix(Number(dt)).format(format);
-  }
-  if (!dayjs(dt).isValid() || dayjs(dt).isBefore(MIN_DATE)) return "";
-  return dayjs(dt).format(format);
+	if (isNumeric(dt.toString())) {
+		if (Number(dt) < MIN_TIMESTAMP) return "";
+		return dayjs.unix(Number(dt)).format(format);
+	}
+	if (!dayjs(dt).isValid() || dayjs(dt).isBefore(MIN_DATE)) return "";
+	return dayjs(dt).format(format);
 };
 
 /**
@@ -131,7 +153,7 @@ export const getTimeFromDate = (
  * - 10,80 returns 10 <= x < 80
  */
 export const randomNumber = (min = 0, max = 10000) => {
-  return Math.floor(Math.random() * (max - min)) + min;
+	return Math.floor(Math.random() * (max - min)) + min;
 };
 
 /**
@@ -141,14 +163,14 @@ export const randomNumber = (min = 0, max = 10000) => {
  * @returns string
  */
 export const randomString = (length = 6, includeNumbers = false) => {
-  let result = "";
-  let characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-  includeNumbers ? (characters += "0123456789") : "";
-  const charactersLength = characters.length;
-  for (let i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength));
-  }
-  return result;
+	let result = "";
+	let characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+	if (includeNumbers) characters += "0123456789";
+	const charactersLength = characters.length;
+	for (let i = 0; i < length; i++) {
+		result += characters.charAt(Math.floor(Math.random() * charactersLength));
+	}
+	return result;
 };
 
 /**
@@ -167,29 +189,14 @@ export const randomString = (length = 6, includeNumbers = false) => {
  * - isNumeric(null)         // false
  */
 export function isNumeric(
-  value: string | number | undefined | null,
-  allowFloat = false
+	value: string | number | undefined | null,
+	allowFloat = false,
 ): boolean {
-  if (!value) return false;
-  return allowFloat
-    ? /^-?\d+\.?\d*$/.test(value.toString())
-    : /^-?\d+$/.test(value.toString());
+	if (!value) return false;
+	return allowFloat
+		? /^-?\d+\.?\d*$/.test(value.toString())
+		: /^-?\d+$/.test(value.toString());
 }
-
-/**
- * Check how long a date is from now
- * - date => 2 days ago
- * - date => in 2 days
- * - null|undefined => ""
- */
-export const fromNow = (
-  date: Date | string | null | undefined,
-  addSuffix = undefined
-): string => {
-  if (!date) return "";
-  if (!dayjs(date).isValid()) return "";
-  return dayjs(date).fromNow(addSuffix);
-};
 
 /**
  * Get a substring of a string
@@ -199,8 +206,8 @@ export const fromNow = (
  * - null|undefined => ""
  */
 export const substring = (
-  str: string | null | undefined,
-  end: number
+	str: string | null | undefined,
+	end: number,
 ): string => (str ? str.substring(0, end) : "");
 
 /**
@@ -216,13 +223,13 @@ export const substring = (
  * - Displaying other groupings/separators is possible, look at the docs http://numeraljs.com/
  */
 export const numberFormat = (
-  value: string | number | undefined | null,
-  toInt = false
+	value: string | number | undefined | null,
+	toInt = false,
 ): string => {
-  const format = toInt ? "0,0" : "0,0.00";
-  if (value === 0 || value === "0") return numeral(value).format(format);
-  if (!value || !isNumeric(value, true)) return "";
-  return numeral(value).format(format);
+	const format = toInt ? "0,0" : "0,0.00";
+	if (value === 0 || value === "0") return numeral(value).format(format);
+	if (!value || !isNumeric(value, true)) return "";
+	return numeral(value).format(format);
 };
 
 /**
@@ -239,10 +246,10 @@ export const numberFormat = (
  * - Displaying other groupings/separators is possible, look at the docs http://numeraljs.com/
  */
 export const formatNumber = (
-  value: string | number | undefined | null,
-  toInt = false
+	value: string | number | undefined | null,
+	toInt = false,
 ): string => {
-  return numberFormat(value, toInt);
+	return numberFormat(value, toInt);
 };
 
 /**
@@ -253,13 +260,13 @@ export const formatNumber = (
  * - 0 => "0.00"
  */
 export const formatCurrency = (
-  value: string | number | undefined | null
+	value: string | number | undefined | null,
 ): string => {
-  const format = "0,0.00";
-  if (value === 0 || value === "0") return numeral(0).format(format);
-  if (!value || !isNumeric(value, true)) return "";
-  const amount = Number(value.toString()) / 100;
-  return numeral(amount).format(format);
+	const format = "0,0.00";
+	if (value === 0 || value === "0") return numeral(0).format(format);
+	if (!value || !isNumeric(value, true)) return "";
+	const amount = Number(value.toString()) / 100;
+	return numeral(amount).format(format);
 };
 
 /**
@@ -269,20 +276,20 @@ export const formatCurrency = (
  * - iwef .--/,;: âẽèéë .--/,;: eded  => iwef-aeeee-eded
  */
 export const slugify = (str: string | null | undefined): string => {
-  if (!str) return "";
-  str = str.toLowerCase().trim();
+	if (!str) return "";
+	str = str.toLowerCase().trim();
 
-  // remove accents, swap ñ for n, etc
-  var from = "ãàáäâẽèéëêìíïîõòóöôùúüûñç·/_,:;";
-  var to = "aaaaaeeeeeiiiiooooouuuunc------";
-  for (var i = 0, l = from.length; i < l; i++) {
-    str = str.replace(new RegExp(from.charAt(i), "g"), to.charAt(i));
-  }
+	// remove accents, swap ñ for n, etc
+	var from = "ãàáäâẽèéëêìíïîõòóöôùúüûñç·/_,:;";
+	var to = "aaaaaeeeeeiiiiooooouuuunc------";
+	for (let i = 0, l = from.length; i < l; i++) {
+		str = str.replace(new RegExp(from.charAt(i), "g"), to.charAt(i));
+	}
 
-  return str
-    .replace(/[^\w\s-]/g, "")
-    .replace(/[\s_-]+/g, "-")
-    .replace(/^-+|-+$/g, "");
+	return str
+		.replace(/[^\w\s-]/g, "")
+		.replace(/[\s_-]+/g, "-")
+		.replace(/^-+|-+$/g, "");
 };
 
 /**
@@ -296,10 +303,10 @@ export const slugify = (str: string | null | undefined): string => {
  * @returns string
  */
 export const stripTags = (htmlString: string): string => {
-  return htmlString
-    .replaceAll(/(<([^>]+)>)/gi, "") // replace tags
-    .replace(/<img[^>]*>/gi, "") // replace img tags
-    .replace(/\s\s+/g, " "); // replace spaces, tabs, newlines with single
+	return htmlString
+		.replaceAll(/(<([^>]+)>)/gi, "") // replace tags
+		.replace(/<img[^>]*>/gi, "") // replace img tags
+		.replace(/\s\s+/g, " "); // replace spaces, tabs, newlines with single
 };
 
 /**
@@ -317,29 +324,29 @@ export const stripTags = (htmlString: string): string => {
  * @returns string
  */
 export const stripHtml = (html: string): string => {
-  return html
-    .replace(/(<([^>]+)>)/gi, "")
-    .replace(/ *\[[^\]]*]/, "") // replace [shortcode]
-    .replace(/(&nbsp;|<br>|<br \/>)/g, "") // replace &nbsp; and <br> tags
-    .replace(/&.*;/, "") // replace html entities
-    .replace(/\s\s+/g, " ") // replace spaces, tabs, newlines with single
-    .trim();
+	return html
+		.replace(/(<([^>]+)>)/gi, "")
+		.replace(/ *\[[^\]]*]/, "") // replace [shortcode]
+		.replace(/(&nbsp;|<br>|<br \/>)/g, "") // replace &nbsp; and <br> tags
+		.replace(/&.*;/, "") // replace html entities
+		.replace(/\s\s+/g, " ") // replace spaces, tabs, newlines with single
+		.trim();
 };
 
 /**
  * pluralize a word
  */
 export function plural(value: string | null | undefined): string {
-  if (!value) return "";
-  return pluralizeLib.plural(value);
+	if (!value) return "";
+	return pluralizeLib.plural(value);
 }
 
 /**
  * singularize a word
  */
 export function singular(value: string | null | undefined): string {
-  if (!value) return "";
-  return pluralizeLib.singular(value);
+	if (!value) return "";
+	return pluralizeLib.singular(value);
 }
 
 /**
@@ -353,15 +360,15 @@ export function singular(value: string | null | undefined): string {
  * - pluralize(abcds, 2) => "abcds"
  */
 export function pluralize(
-  value: string | null | undefined,
-  counter: number
+	value: string | null | undefined,
+	counter: number,
 ): string {
-  if (!value) return "";
-  if (counter < 2 && counter > 0) {
-    return pluralizeLib.singular(value);
-  }
+	if (!value) return "";
+	if (counter < 2 && counter > 0) {
+		return pluralizeLib.singular(value);
+	}
 
-  return pluralizeLib.plural(value);
+	return pluralizeLib.plural(value);
 }
 
 /**
@@ -376,14 +383,14 @@ export function pluralize(
  * @param newItems any<T>
  * @returns
  */
-// @ts-ignore
+// @ts-expect-error
 export const insertIntoArray = (arr, index, ...newItems) => [
-  // part of the array before the specified index
-  ...arr.slice(0, index),
-  // inserted items
-  ...newItems,
-  // part of the array after the specified index
-  ...arr.slice(index),
+	// part of the array before the specified index
+	...arr.slice(0, index),
+	// inserted items
+	...newItems,
+	// part of the array after the specified index
+	...arr.slice(index),
 ];
 
 /**
@@ -392,7 +399,7 @@ export const insertIntoArray = (arr, index, ...newItems) => [
  * @returns string dayjs().format()
  */
 export function getMonthNameFromSqlMonthIndex(index: number, format = "MMM") {
-  return dayjs(new Date(2023, index - 1, 1)).format(format);
+	return dayjs(new Date(2023, index - 1, 1)).format(format);
 }
 
 /**
@@ -405,16 +412,16 @@ export function getMonthNameFromSqlMonthIndex(index: number, format = "MMM") {
  * - ~123456789 => false
  */
 export const isPhoneNumber = (str: string) => {
-  str = str
-    .replaceAll("+", "")
-    .replaceAll(" ", "")
-    .replaceAll("(", "")
-    .replaceAll(")", "")
-    .replaceAll("-", "")
-    .replaceAll("#", "")
-    .replaceAll("_", "");
+	str = str
+		.replaceAll("+", "")
+		.replaceAll(" ", "")
+		.replaceAll("(", "")
+		.replaceAll(")", "")
+		.replaceAll("-", "")
+		.replaceAll("#", "")
+		.replaceAll("_", "");
 
-  return !isNaN(Number(str));
+	return !isNaN(Number(str));
 };
 
 /**
@@ -426,13 +433,13 @@ export const isPhoneNumber = (str: string) => {
  * - "" | null | undefined => false
  */
 export function isEmail(emailAdress: string | null | undefined): boolean {
-  if (!emailAdress) return false;
+	if (!emailAdress) return false;
 
-  let regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+	const regex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
 
-  if (emailAdress.match(regex)) return true;
+	if (emailAdress.match(regex)) return true;
 
-  return false;
+	return false;
 }
 
 /**
@@ -446,15 +453,15 @@ export function isEmail(emailAdress: string | null | undefined): boolean {
  * - {a:4} => false
  */
 export const isEmpty = (
-  value: string | null | undefined | object | Array<any>
+	value: string | null | undefined | object | Array<any>,
 ): boolean => {
-  if (!value) return true;
+	if (!value) return true;
 
-  if (typeof value === "object") return Object.keys(value).length < 1;
+	if (typeof value === "object") return Object.keys(value).length < 1;
 
-  if (Array.isArray(value)) return value.length < 1;
+	if (Array.isArray(value)) return value.length < 1;
 
-  return value.length < 1;
+	return value.length < 1;
 };
 
 /**
@@ -464,8 +471,8 @@ export const isEmpty = (
  * - '    abcd efg  ' => 'Abcd efg'
  */
 export const ucwords = (str: string | null | undefined): string =>
-  (str || "").trim().substring(0, 1).toUpperCase() +
-  (str || "").trim().substring(1);
+	(str || "").trim().substring(0, 1).toUpperCase() +
+	(str || "").trim().substring(1);
 
 /**
  * capitalize words in a string
@@ -473,12 +480,8 @@ export const ucwords = (str: string | null | undefined): string =>
  * - '    abcd efg  ' => 'Abcd Efg'
  */
 export const capitalize = (value: string | null | undefined): string => {
-  if (!value) return "";
-  return value
-    .replace(/(?:^|\s)\S/g, function (a) {
-      return a.toUpperCase();
-    })
-    .trim();
+	if (!value) return "";
+	return value.replace(/(?:^|\s)\S/g, (a) => a.toUpperCase()).trim();
 };
 
 /**
@@ -495,11 +498,11 @@ export const capitalize = (value: string | null | undefined): string => {
  * - undefined => ""
  */
 export const camelCase = (value: string | null | undefined) => {
-  if (!value) return "";
-  return value
-    .trim()
-    .toLowerCase()
-    .replace(/[^a-zA-Z0-9]+(.)/g, (_, chr) => chr.toUpperCase());
+	if (!value) return "";
+	return value
+		.trim()
+		.toLowerCase()
+		.replace(/[^a-zA-Z0-9]+(.)/g, (_, chr) => chr.toUpperCase());
 };
 
 /**
@@ -509,14 +512,14 @@ export const camelCase = (value: string | null | undefined) => {
  * - abc456  => Abc456
  */
 export const camelCaseToSentenceCase = (
-  value: string | null | undefined,
-  capitalizeWords = false
+	value: string | null | undefined,
+	capitalizeWords = false,
 ): string => {
-  if (!value) return "";
-  value = value.replace(/([A-Z])/g, " $1").trim();
-  return capitalizeWords
-    ? value.charAt(0).toUpperCase() + value.slice(1)
-    : value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
+	if (!value) return "";
+	value = value.replace(/([A-Z])/g, " $1").trim();
+	return capitalizeWords
+		? value.charAt(0).toUpperCase() + value.slice(1)
+		: value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
 };
 
 /**
@@ -530,17 +533,15 @@ export const camelCaseToSentenceCase = (
  * - abc_456_efg, true => Abc 456 Efg
  */
 export const snakeCaseToSentenceCase = (
-  value: string | null | undefined,
-  capitalizeWords = false
+	value: string | null | undefined,
+	capitalizeWords = false,
 ): string => {
-  if (!value) return "";
-  value = value.replace(/(_)/g, " ");
-  value = value.replace(/([A-Z])/g, " $1");
-  return capitalizeWords
-    ? value.replace(/\b\w/g, function (l) {
-      return l.toUpperCase();
-    })
-    : value.charAt(0).toUpperCase() + value.slice(1); // capitalize the first letter - as an example.
+	if (!value) return "";
+	value = value.replace(/(_)/g, " ");
+	value = value.replace(/([A-Z])/g, " $1");
+	return capitalizeWords
+		? value.replace(/\b\w/g, (l) => l.toUpperCase())
+		: value.charAt(0).toUpperCase() + value.slice(1); // capitalize the first letter - as an example.
 };
 
 /**
@@ -556,20 +557,16 @@ export const snakeCaseToSentenceCase = (
  * - abc-456-efg, true => Abc 456 Efg
  */
 export const kebabCaseToSentenceCase = (
-  value: string | null | undefined,
-  capitalizeWords = false
+	value: string | null | undefined,
+	capitalizeWords = false,
 ): string => {
-  if (!value) return "";
-  value = value.replace(/-([a-z])/g, function (g) {
-    return (g[1] ?? "").toUpperCase();
-  });
-  // separate numbers
-  value = value.replace(/-([0-9])/g, function (g) {
-    return ` ${g[1] ?? ""}`;
-  });
-  value = value.replace(/([A-Z])/g, " $1").toLowerCase();
+	if (!value) return "";
+	value = value.replace(/-([a-z])/g, (g) => (g[1] ?? "").toUpperCase());
+	// separate numbers
+	value = value.replace(/-([0-9])/g, (g) => ` ${g[1] ?? ""}`);
+	value = value.replace(/([A-Z])/g, " $1").toLowerCase();
 
-  return capitalizeWords ? capitalize(value) : ucwords(value);
+	return capitalizeWords ? capitalize(value) : ucwords(value);
 };
 
 /**
@@ -579,20 +576,14 @@ export const kebabCaseToSentenceCase = (
  * - 123-456-efg => 123456Efg
  */
 export const kebabCaseToPascalCase = (
-  value: string | null | undefined
+	value: string | null | undefined,
 ): string => {
-  if (!value) return "";
-  value = value.replace(/-([a-z])/g, function (g) {
-    return (g[1] ?? "").toUpperCase();
-  });
-  // handle numbers
-  value = value.replace(/-([0-9])/g, function (g) {
-    return `${g[1] ?? ""}`;
-  });
-  value = value.replace(/([A-Z])/g, "$1");
-  return value.replace(/\b\w/g, function (l) {
-    return l.toUpperCase();
-  });
+	if (!value) return "";
+	value = value.replace(/-([a-z])/g, (g) => (g[1] ?? "").toUpperCase());
+	// handle numbers
+	value = value.replace(/-([0-9])/g, (g) => `${g[1] ?? ""}`);
+	value = value.replace(/([A-Z])/g, "$1");
+	return value.replace(/\b\w/g, (l) => l.toUpperCase());
 };
 
 /**
@@ -606,23 +597,23 @@ export const kebabCaseToPascalCase = (
  * -  123 456 Efg  => 123-456-efg
  */
 export const kebabCase = (value: string | null | undefined): string => {
-  if (!value) return "";
+	if (!value) return "";
 
-  return value
-    .trim()
-    .replace(/([a-z])([A-Z])/g, "$1-$2") // get all lowercase letters that are near to uppercase ones
-    .replace(/[\s_]+/g, "-") // replace all spaces and low dash
-    .toLowerCase();
+	return value
+		.trim()
+		.replace(/([a-z])([A-Z])/g, "$1-$2") // get all lowercase letters that are near to uppercase ones
+		.replace(/[\s_]+/g, "-") // replace all spaces and low dash
+		.toLowerCase();
 };
 
 /**
  * Utility to scroll to top in a smooth behaviour
  */
 export const scrollToTop = (topOffset = 100) => {
-  window.scrollTo({
-    top: topOffset,
-    behavior: "smooth",
-  });
+	window.scrollTo({
+		top: topOffset,
+		behavior: "smooth",
+	});
 };
 
 /**
@@ -634,10 +625,8 @@ export const scrollToTop = (topOffset = 100) => {
  * - null|undefined => 0
  */
 export const countWords = (str: string | null | undefined): number => {
-  if (!str) return 0;
-  return str.split(" ").filter(function (n) {
-    return n != "";
-  }).length;
+	if (!str) return 0;
+	return str.split(" ").filter((n) => n !== "").length;
 };
 
 /**
@@ -653,15 +642,13 @@ export const countWords = (str: string | null | undefined): number => {
  * - \<p>\<span>f\</span>a b\</p> => 3
  */
 export const countWordsFromHtml = (s: string | null | undefined): number => {
-  if (!s) return 0;
-  s = s.replace(/<\/?[^>]+(>|$)/g, " "); // strip tags
-  s = s.replace(/[.]{2,}/gi, " "); // 2 or more fullstops to 1
-  s = s.replace(/[ ]{2,}/gi, " "); // 2 or more space to 1
-  s = s.replace(/(^\s*)|(\s*$)/gi, ""); // exclude  start and end white-space
-  s = s.replace(/\n /, " "); // exclude newline with a start spacing
-  return s.split(" ").filter(function (str) {
-    return str != "";
-  }).length;
+	if (!s) return 0;
+	s = s.replace(/<\/?[^>]+(>|$)/g, " "); // strip tags
+	s = s.replace(/[.]{2,}/gi, " "); // 2 or more fullstops to 1
+	s = s.replace(/[ ]{2,}/gi, " "); // 2 or more space to 1
+	s = s.replace(/(^\s*)|(\s*$)/gi, ""); // exclude  start and end white-space
+	s = s.replace(/\n /, " "); // exclude newline with a start spacing
+	return s.split(" ").filter((str) => str !== "").length;
 };
 
 /**
@@ -672,25 +659,25 @@ export const countWordsFromHtml = (s: string | null | undefined): number => {
  * - null|undefined => null
  */
 export const birthdayFromNow = (
-  date: Date | string | null | undefined
+	date: Date | string | null | undefined,
 ): number | null => {
-  if (!date) return null;
-  if (!dayjs(date).isValid()) return null;
+	if (!date) return null;
+	if (!dayjs(date).isValid()) return null;
 
-  let birthday = new Date(date);
+	const birthday = new Date(date);
 
-  const today = new Date();
+	const today = new Date();
 
-  // Set current year or the next year if you already had birthday this year
-  birthday.setFullYear(today.getFullYear());
-  if (today > birthday) {
-    birthday.setFullYear(today.getFullYear() + 1);
-  }
+	// Set current year or the next year if you already had birthday this year
+	birthday.setFullYear(today.getFullYear());
+	if (today > birthday) {
+		birthday.setFullYear(today.getFullYear() + 1);
+	}
 
-  // Calculate difference between days
-  return Math.floor(
-    (birthday.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
-  );
+	// Calculate difference between days
+	return Math.floor(
+		(birthday.getTime() - today.getTime()) / (1000 * 60 * 60 * 24),
+	);
 };
 
 /**
@@ -699,16 +686,16 @@ export const birthdayFromNow = (
  * - [1,2,3,4,5], 2 => [3,1]
  * - [1,2,3], 5 => [3,1,2]
  */
-export const getRandomElementsFromArray = <T extends any>(
-  arr: Array<T>,
-  take = 1
+export const getRandomElementsFromArray = <T>(
+	arr: Array<T>,
+	take = 1,
 ): Array<T> => {
-  // Shuffle array
-  const shuffled = arr.sort(() => 0.5 - Math.random());
-  const safeTake = take > arr.length ? arr.length : take;
+	// Shuffle array
+	const shuffled = arr.sort(() => 0.5 - Math.random());
+	const safeTake = take > arr.length ? arr.length : take;
 
-  // Get sub-array of first n elements after shuffled
-  return shuffled.slice(0, safeTake);
+	// Get sub-array of first n elements after shuffled
+	return shuffled.slice(0, safeTake);
 };
 
 /**
@@ -719,26 +706,26 @@ export const getRandomElementsFromArray = <T extends any>(
  * @returns
  */
 export const isChristmasTime = (args?: {
-  decemberStartDay?: number;
-  januaryNextYearEndDay?: number;
-  dateToCheck?: Date;
+	decemberStartDay?: number;
+	januaryNextYearEndDay?: number;
+	dateToCheck?: Date;
 }): boolean => {
-  const decemberStartDay = args?.decemberStartDay || 23; // 23rd dec
-  const januaryNextYearEndDay = args?.januaryNextYearEndDay || 5; // 5th jan
-  const dateToCheck = args?.dateToCheck || new Date();
+	const decemberStartDay = args?.decemberStartDay || 23; // 23rd dec
+	const januaryNextYearEndDay = args?.januaryNextYearEndDay || 5; // 5th jan
+	const dateToCheck = args?.dateToCheck || new Date();
 
-  // prior
-  const dateFrom = new Date(new Date().getFullYear(), 11, decemberStartDay);
-  const dateTo = new Date(new Date().getFullYear() + 1, 0, 1); // 1st jan
+	// prior
+	const dateFrom = new Date(new Date().getFullYear(), 11, decemberStartDay);
+	const dateTo = new Date(new Date().getFullYear() + 1, 0, 1); // 1st jan
 
-  // after
-  const dateFrom2 = new Date(new Date().getFullYear(), 0, 1); // 1st jan
-  const dateTo2 = new Date(new Date().getFullYear(), 0, januaryNextYearEndDay);
+	// after
+	const dateFrom2 = new Date(new Date().getFullYear(), 0, 1); // 1st jan
+	const dateTo2 = new Date(new Date().getFullYear(), 0, januaryNextYearEndDay);
 
-  return (
-    (dateToCheck >= dateFrom && dateToCheck <= dateTo) ||
-    (dateToCheck >= dateFrom2 && dateToCheck <= dateTo2)
-  );
+	return (
+		(dateToCheck >= dateFrom && dateToCheck <= dateTo) ||
+		(dateToCheck >= dateFrom2 && dateToCheck <= dateTo2)
+	);
 };
 
 /**
@@ -752,22 +739,22 @@ export const isChristmasTime = (args?: {
  * - "on" => true
  * - default => false
  */
-export const boolean = function (value: any): boolean {
-  switch (Object.prototype.toString.call(value)) {
-    case "[object String]":
-      return ["true", "t", "yes", "y", "on", "1"].includes(
-        value.trim().toLowerCase()
-      );
+export const boolean = (value: any): boolean => {
+	switch (Object.prototype.toString.call(value)) {
+		case "[object String]":
+			return ["true", "t", "yes", "y", "on", "1"].includes(
+				value.trim().toLowerCase(),
+			);
 
-    case "[object Number]":
-      return value.valueOf() === 1;
+		case "[object Number]":
+			return value.valueOf() === 1;
 
-    case "[object Boolean]":
-      return value.valueOf();
+		case "[object Boolean]":
+			return value.valueOf();
 
-    default:
-      return false;
-  }
+		default:
+			return false;
+	}
 };
 
 /**
@@ -784,33 +771,33 @@ export const boolean = function (value: any): boolean {
  * - "f" => false
  * - default => false
  */
-export const isBooleanable = function (value: any): boolean {
-  switch (Object.prototype.toString.call(value)) {
-    case "[object String]":
-      return [
-        "true",
-        "t",
-        "yes",
-        "y",
-        "on",
-        "1",
-        "false",
-        "f",
-        "no",
-        "n",
-        "off",
-        "0",
-      ].includes(value.trim().toLowerCase());
+export const isBooleanable = (value: any): boolean => {
+	switch (Object.prototype.toString.call(value)) {
+		case "[object String]":
+			return [
+				"true",
+				"t",
+				"yes",
+				"y",
+				"on",
+				"1",
+				"false",
+				"f",
+				"no",
+				"n",
+				"off",
+				"0",
+			].includes(value.trim().toLowerCase());
 
-    case "[object Number]":
-      return [0, 1].includes(value.valueOf());
+		case "[object Number]":
+			return [0, 1].includes(value.valueOf());
 
-    case "[object Boolean]":
-      return true;
+		case "[object Boolean]":
+			return true;
 
-    default:
-      return false;
-  }
+		default:
+			return false;
+	}
 };
 
 /**
@@ -821,17 +808,17 @@ export const isBooleanable = function (value: any): boolean {
  * - 4 => "th"
  */
 export const ordinalSuffix = (number: number): string => {
-  if (number > 3 && number < 21) return "th";
-  switch (number % 10) {
-    case 1:
-      return "st";
-    case 2:
-      return "nd";
-    case 3:
-      return "rd";
-    default:
-      return "th";
-  }
+	if (number > 3 && number < 21) return "th";
+	switch (number % 10) {
+		case 1:
+			return "st";
+		case 2:
+			return "nd";
+		case 3:
+			return "rd";
+		default:
+			return "th";
+	}
 };
 
 /**
@@ -842,7 +829,7 @@ export const ordinalSuffix = (number: number): string => {
  * - 4 => "4th"
  */
 export const nthNumber = (number: number): string => {
-  return number + ordinalSuffix(number);
+	return number + ordinalSuffix(number);
 };
 
 /**
@@ -858,97 +845,97 @@ export const nthNumber = (number: number): string => {
  * @throws {Error} If no valid character types are selected (should not happen with default lowercase).
  */
 export function generateStrongPassword({
-  length = 10,
-  includeUppercase = true,
-  includeNumbers = true,
-  includeSymbols = true,
-  includeLowercase = true, // Sensible default, and hard to make it false
+	length = 10,
+	includeUppercase = true,
+	includeNumbers = true,
+	includeSymbols = true,
+	includeLowercase = true, // Sensible default, and hard to make it false
 } = {}): string {
-  const lowercaseChars = "abcdefghijklmnopqrstuvwxyz";
-  const uppercaseChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  const numberChars = "0123456789";
-  const symbolChars = "!@#$%^&*()-_=+[]{}|;:,.<>?";
+	const lowercaseChars = "abcdefghijklmnopqrstuvwxyz";
+	const uppercaseChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	const numberChars = "0123456789";
+	const symbolChars = "!@#$%^&*()-_=+[]{}|;:,.<>?";
 
-  let passwordCharacters = []; // Use an array for easier shuffling
-  let availableCharactersPool = "";
+	const passwordCharacters = []; // Use an array for easier shuffling
+	let availableCharactersPool = "";
 
-  // --- Ensure at least one character of each requested type is included ---
+	// --- Ensure at least one character of each requested type is included ---
 
-  if (includeLowercase) {
-    availableCharactersPool += lowercaseChars;
-    passwordCharacters.push(
-      lowercaseChars[Math.floor(Math.random() * lowercaseChars.length)]
-    );
-  } else {
-    // If somehow includeLowercase is false, we still need to ensure
-    // there's a base set of characters if other types are off.
-    // However, it's a strong recommendation to always include lowercase.
-    // For this function, we'll make it always true internally if not explicitly false.
-    // If you absolutely need to exclude it, adjust logic, but it makes weaker passwords.
-    console.warn(
-      "It's highly recommended to include lowercase characters for stronger passwords."
-    );
-  }
+	if (includeLowercase) {
+		availableCharactersPool += lowercaseChars;
+		passwordCharacters.push(
+			lowercaseChars[Math.floor(Math.random() * lowercaseChars.length)],
+		);
+	} else {
+		// If somehow includeLowercase is false, we still need to ensure
+		// there's a base set of characters if other types are off.
+		// However, it's a strong recommendation to always include lowercase.
+		// For this function, we'll make it always true internally if not explicitly false.
+		// If you absolutely need to exclude it, adjust logic, but it makes weaker passwords.
+		console.warn(
+			"It's highly recommended to include lowercase characters for stronger passwords.",
+		);
+	}
 
-  if (includeUppercase) {
-    availableCharactersPool += uppercaseChars;
-    passwordCharacters.push(
-      uppercaseChars[Math.floor(Math.random() * uppercaseChars.length)]
-    );
-  }
-  if (includeNumbers) {
-    availableCharactersPool += numberChars;
-    passwordCharacters.push(
-      numberChars[Math.floor(Math.random() * numberChars.length)]
-    );
-  }
-  if (includeSymbols) {
-    availableCharactersPool += symbolChars;
-    passwordCharacters.push(
-      symbolChars[Math.floor(Math.random() * symbolChars.length)]
-    );
-  }
+	if (includeUppercase) {
+		availableCharactersPool += uppercaseChars;
+		passwordCharacters.push(
+			uppercaseChars[Math.floor(Math.random() * uppercaseChars.length)],
+		);
+	}
+	if (includeNumbers) {
+		availableCharactersPool += numberChars;
+		passwordCharacters.push(
+			numberChars[Math.floor(Math.random() * numberChars.length)],
+		);
+	}
+	if (includeSymbols) {
+		availableCharactersPool += symbolChars;
+		passwordCharacters.push(
+			symbolChars[Math.floor(Math.random() * symbolChars.length)],
+		);
+	}
 
-  // Fallback if no specific character types are selected but length is requested
-  if (availableCharactersPool.length === 0 && length > 0) {
-    // If for some reason all options are false, ensure a default set.
-    // This is a safety net. Default `includeLowercase=true` should prevent this.
-    console.warn(
-      "No character types selected, falling back to lowercase only."
-    );
-    availableCharactersPool = lowercaseChars;
-    if (passwordCharacters.length === 0) {
-      // Only add if no other characters already added
-      passwordCharacters.push(
-        lowercaseChars[Math.floor(Math.random() * lowercaseChars.length)]
-      );
-    }
-  }
+	// Fallback if no specific character types are selected but length is requested
+	if (availableCharactersPool.length === 0 && length > 0) {
+		// If for some reason all options are false, ensure a default set.
+		// This is a safety net. Default `includeLowercase=true` should prevent this.
+		console.warn(
+			"No character types selected, falling back to lowercase only.",
+		);
+		availableCharactersPool = lowercaseChars;
+		if (passwordCharacters.length === 0) {
+			// Only add if no other characters already added
+			passwordCharacters.push(
+				lowercaseChars[Math.floor(Math.random() * lowercaseChars.length)],
+			);
+		}
+	}
 
-  if (availableCharactersPool.length === 0) {
-    throw new Error(
-      "Cannot generate password: No character types available. Please ensure at least one type is included."
-    );
-  }
+	if (availableCharactersPool.length === 0) {
+		throw new Error(
+			"Cannot generate password: No character types available. Please ensure at least one type is included.",
+		);
+	}
 
-  // --- Fill the remaining length with random characters from the pool ---
-  for (let i = passwordCharacters.length; i < length; i++) {
-    const randomIndex = Math.floor(
-      Math.random() * availableCharactersPool.length
-    );
-    passwordCharacters.push(availableCharactersPool[randomIndex]);
-  }
+	// --- Fill the remaining length with random characters from the pool ---
+	for (let i = passwordCharacters.length; i < length; i++) {
+		const randomIndex = Math.floor(
+			Math.random() * availableCharactersPool.length,
+		);
+		passwordCharacters.push(availableCharactersPool[randomIndex]);
+	}
 
-  // --- Shuffle the password characters to ensure randomness ---
-  for (let i = passwordCharacters.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [passwordCharacters[i], passwordCharacters[j]] = [
-      passwordCharacters[j],
-      passwordCharacters[i],
-    ];
-  }
+	// --- Shuffle the password characters to ensure randomness ---
+	for (let i = passwordCharacters.length - 1; i > 0; i--) {
+		const j = Math.floor(Math.random() * (i + 1));
+		[passwordCharacters[i], passwordCharacters[j]] = [
+			passwordCharacters[j],
+			passwordCharacters[i],
+		];
+	}
 
-  return passwordCharacters.join("");
+	return passwordCharacters.join("");
 }
 
 /**
@@ -964,17 +951,17 @@ export function generateStrongPassword({
  * - "John", 3 => "J"
  */
 export const getInitials = (
-  names: string | undefined | null,
-  length?: number
+	names: string | undefined | null,
+	length?: number,
 ): string => {
-  if (!names || names.trim().length === 0) return "-";
+	if (!names || names.trim().length === 0) return "-";
 
-  const initials = names
-    .trim()
-    .split(/\s+/)
-    .filter((word) => word.length > 0)
-    .map((word) => word.charAt(0).toUpperCase())
-    .join("");
+	const initials = names
+		.trim()
+		.split(/\s+/)
+		.filter((word) => word.length > 0)
+		.map((word) => word.charAt(0).toUpperCase())
+		.join("");
 
-  return length ? initials.slice(0, length) : initials;
+	return length ? initials.slice(0, length) : initials;
 };

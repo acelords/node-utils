@@ -111,6 +111,36 @@ test("formatDateTime - returns empty string on invalid date", () => {
   expect(formatDateTime("Jan 14, 1000")).toBe("");
 });
 
+/*======== fromNow =============*/
+test("fromNow - can get the time fromNow", () => {
+
+  expect(Number(dayjs().subtract(1.45, 'hour').unix().toString())).toBe(Number(dayjs().subtract(1.45, 'hour').unix().toString()))
+
+  expect(fromNow("abcd")).toBe("");
+  expect(fromNow(dayjs().subtract(1, 'hour').unix())).toBe("an hour ago");
+  expect(fromNow(dayjs().add(1, 'hour').unix())).toBe("in an hour");
+  expect(fromNow(dayjs().subtract(1, 'minute').unix())).toBe("a minute ago");
+  expect(fromNow(dayjs().add(1, 'minute').unix())).toBe("in a minute");
+  expect(fromNow(dayjs().subtract(1, 'second').unix())).toBe("a few seconds ago");
+  expect(fromNow(dayjs().add(1, 'second').unix())).toBe("in a few seconds");
+  expect(fromNow(dayjs().subtract(1, 'day').unix())).toBe("a day ago");
+  expect(fromNow(dayjs().add(1, 'day').unix())).toBe("in a day");
+  expect(fromNow(dayjs().subtract(5, 'year').unix())).toBe("5 years ago");
+  expect(fromNow(dayjs().add(5, 'year').unix())).toBe("in 5 years");
+
+  expect(fromNow(dayjs().subtract(1.45, 'hour').unix())).toBe("an hour ago");
+  expect(fromNow(dayjs().subtract(1.55, 'hour').unix())).toBe("2 hours ago");
+
+
+  expect(fromNow(null)).toBe("");
+  expect(fromNow(undefined)).toBe("");
+
+  let dt = dayjs().subtract(1, "day").toISOString();
+  expect(fromNow(dt)).toBe("a day ago");
+  dt = dayjs().add(1, "day").toISOString();
+  expect(fromNow(dt)).toBe("in a day");
+});
+
 /*======== daysDiff =============*/
 test("dateDiff - can get the difference in days between two dates", () => {
   expect(daysDiff("2020-01-01", "2020-01-01")).toBe(0);
@@ -218,18 +248,6 @@ test("isNumeric - check if a string|number is numeric", () => {
   expect(isNumeric("")).toBeFalsy();
   expect(isNumeric(undefined)).toBeFalsy();
   expect(isNumeric(null)).toBeFalsy();
-});
-
-/*======== fromNow =============*/
-test("fromNow - can get the time fromNow", () => {
-  expect(fromNow("abcd")).toBe("");
-  expect(fromNow(null)).toBe("");
-  expect(fromNow(undefined)).toBe("");
-
-  let dt = dayjs().subtract(1, "day").toISOString();
-  expect(fromNow(dt)).toBe("a day ago");
-  dt = dayjs().add(1, "day").toISOString();
-  expect(fromNow(dt)).toBe("in a day");
 });
 
 /*======== substring =============*/
