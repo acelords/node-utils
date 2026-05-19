@@ -72,6 +72,14 @@ test("formatDate - can format a date in unixTime (number) format", () => {
   expect(formatDate(now, format)).toBe(formatted);
 });
 
+test("formatDate - can format a date in unixTime milliseconds format", () => {
+  const now = 1602162242000;
+  const format = "D MMM, YYYY";
+  const formatted = dayjs(now).format(format);
+  expect(formatDate(now, format)).toBe(formatted);
+  expect(formatDate(String(now), format)).toBe(formatted);
+});
+
 test("formatDate - returns empty string on invalid date", () => {
   expect(formatDate("abc")).toBe("");
   expect(formatDate("1000")).toBe("");
@@ -103,6 +111,14 @@ test("formatDateTime - can format a date in unixTime (number) format", () => {
   const format = "D MMM, YYYY";
   const formatted = dayjs.unix(now).format(format);
   expect(formatDateTime(now, format)).toBe(formatted);
+});
+
+test("formatDateTime - can format a date in unixTime milliseconds format", () => {
+  const now = 1602162242000;
+  const format = "D MMM, YYYY";
+  const formatted = dayjs(now).format(format);
+  expect(formatDateTime(now, format)).toBe(formatted);
+  expect(formatDateTime(String(now), format)).toBe(formatted);
 });
 
 test("formatDateTime - returns empty string on invalid date", () => {
@@ -139,6 +155,16 @@ test("fromNow - can get the time fromNow", () => {
   expect(fromNow(dt)).toBe("a day ago");
   dt = dayjs().add(1, "day").toISOString();
   expect(fromNow(dt)).toBe("in a day");
+});
+
+test("fromNow - can get the time from unixTime milliseconds", () => {
+  const oneDayAgo = dayjs().subtract(1, "day");
+  const oneDayAhead = dayjs().add(1, "day");
+
+  expect(fromNow(oneDayAgo.valueOf())).toBe(fromNow(oneDayAgo.unix()));
+  expect(fromNow(String(oneDayAgo.valueOf()))).toBe(fromNow(oneDayAgo.unix()));
+  expect(fromNow(oneDayAhead.valueOf())).toBe(fromNow(oneDayAhead.unix()));
+  expect(fromNow(String(oneDayAhead.valueOf()))).toBe(fromNow(oneDayAhead.unix()));
 });
 
 /*======== daysDiff =============*/
@@ -210,6 +236,14 @@ test("getTimeFromDate - can format a date in unixTime (number) format to time", 
   const format = "HH:mm";
   const formatted = dayjs.unix(now).format(format);
   expect(getTimeFromDate(now, format)).toBe(formatted);
+});
+
+test("getTimeFromDate - can format a date in unixTime milliseconds format to time", () => {
+  const now = 1602162242000;
+  const format = "HH:mm";
+  const formatted = dayjs(now).format(format);
+  expect(getTimeFromDate(now, format)).toBe(formatted);
+  expect(getTimeFromDate(String(now), format)).toBe(formatted);
 });
 
 /*======== randomNumber =============*/

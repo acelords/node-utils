@@ -22,6 +22,7 @@ export const formatDate = (
 	if (!dt) return "";
 	if (isNumeric(dt.toString())) {
 		if (Number(dt) < MIN_TIMESTAMP) return "";
+		if (String(dt).length > 10) dt = Number(dt) / 1000; // unix timestamps with more than 10 digits are in milliseconds
 		return dayjs.unix(Number(dt)).format(format);
 	}
 	if (!dayjs(dt).isValid() || dayjs(dt).isBefore(MIN_DATE)) return "";
@@ -40,6 +41,7 @@ export const formatDateTime = (
 	if (!dt) return "";
 	if (isNumeric(dt.toString())) {
 		if (Number(dt) < MIN_TIMESTAMP) return "";
+		if (String(dt).length > 10) dt = Number(dt) / 1000; // unix timestamps with more than 10 digits are in milliseconds
 		return dayjs.unix(Number(dt)).format(format);
 	}
 	if (!dayjs(dt).isValid() || dayjs(dt).isBefore(MIN_DATE)) return "";
@@ -61,6 +63,7 @@ export const fromNow = (
 	if (!date) return "";
 	if (isNumeric(date.toString())) {
 		if (Number(date) < MIN_TIMESTAMP) return "";
+		if (String(date).length > 10) date = Number(date) / 1000; // unix timestamps with more than 10 digits are in milliseconds
 		return dayjs.unix(Number(date)).fromNow(addSuffix);
 	}
 	if (!dayjs(date).isValid()) return "";
@@ -141,6 +144,7 @@ export const getTimeFromDate = (
 ): string => {
 	if (isNumeric(dt.toString())) {
 		if (Number(dt) < MIN_TIMESTAMP) return "";
+		if (String(dt).length > 10) dt = Number(dt) / 1000; // unix timestamps with more than 10 digits are in milliseconds
 		return dayjs.unix(Number(dt)).format(format);
 	}
 	if (!dayjs(dt).isValid() || dayjs(dt).isBefore(MIN_DATE)) return "";
